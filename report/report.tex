@@ -1,0 +1,135 @@
+\documentclass[11pt,letter]{article}
+% \include{macro-file}
+
+\def\mainroot{ell_1}
+
+%%%%%% Margins and spacing
+\usepackage[top=1in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{algorithm}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{caption}
+\usepackage[compact]{titlesec}
+%\usepackage{bm}
+\usepackage{txfonts} %\usepackage{times}
+\usepackage{color}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{cancel}
+\usepackage{soul}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{algpseudocode}
+
+\usepackage{sidecap}
+\sidecaptionvpos{figure}{c}
+
+\usepackage{enumitem}
+\setlist{nolistsep}
+
+%\setcounter{MaxMatrixCols}{20}
+
+\newcommand\mjsnote[1]{{\bf [#1 -mjs]}}
+
+\newcommand{\meas}{{\mathbf \mu}}
+\newcommand{\tightpgh}[1]{\vskip 3pt\noindent\textbf{#1}}
+\newcommand{\signalw}{{\mathbf w}}
+\newcommand{\signalx}{{\mathbf x}}
+\newcommand{\signaly}{{\mathbf y}}
+\newcommand{\signalz}{{\mathbf z}}
+
+%\expandafter\def\expandafter\normalsize\expandafter{%
+%    \normalsize
+%    \setlength\abovedisplayskip{2pt}
+%    \setlength\belowdisplayskip{2pt}
+%    \setlength\abovedisplayshortskip{0pt}
+%    \setlength\belowdisplayshortskip{0pt}
+%}\makeatother
+%
+%\renewcommand\floatpagefraction{.9}
+%\renewcommand\topfraction{.9}
+%\renewcommand\bottomfraction{.9}
+%\renewcommand\textfraction{.1}   
+%\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+
+% Jian \DeclareMathOperator*{\median}{median}
+\newcommand{\mb}{\ensuremath\mathbf}
+\newcommand{\F}{\ensuremath\mathbb{F}}
+
+\title{UI for RNA-seq quantification \footnote{Course Project Report of CSE 549.}}
+\author{
+%\alignauthor
+xxxx xxxxx\\
+       {\small SBU ID: xxxxxx}\\
+       {\small Department of Computer Science}\\
+       {\small Stony Brook University} \\
+       {\small \texttt{xxxxx@cs.stonybrook.edu}}
+%\alignauthor
+\and
+xxxx xxxxx \\
+       {\small SBU ID: xxx}\\
+       {\small Department of Computer Science}\\
+       {\small Stony Brook University} \\
+       {\small \texttt{xxxxx@cs.stonybrook.edu}}
+%\alignauthor
+\and
+xxxx xxxxxx \\
+       {\small SBU ID: xxx}\\
+       {\small Department of Computer Science}\\
+       {\small Stony Brook University} \\
+       {\small \texttt{xxxxx@cs.stonybrook.edu}}
+%\alignauthor
+\and
+%\alignauthor
+Jian Yang \\
+       {\small SBU ID: 110168771}\\
+       {\small Department of Computer Science}\\
+       {\small Stony Brook University}\\
+       {\small \texttt{yang16@cs.stonybrook.edu}}
+}
+\date{}
+
+
+\raggedbottom
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Write the abstraction Here
+\end{abstract}
+
+\thispagestyle{empty}
+\newpage
+\addtocounter{page}{-1}
+
+\input{intro.tex}
+\newpage
+\input{jian_part.tex}
+\newpage
+% \input{mainalg}
+% \input{backpointers}
+% \input{expander}
+% \input{toplevel}
+% \input{closing}\newpage
+\section{Conclusion}
+Write the conclusion here
+
+\section{Acknowledge}
+Thanks and regards to Professor Rob Patro's lectures. We were inspired by the algorithms and the vivid examples. \\
+Thanks and regards to TA Hirak. He helped us a lot in the project.
+
+% \bibliographystyle{plain}	% (uses file "plain.bst")
+% \bibliography{literature}
+
+
+% \section{References}
+\begin{thebibliography}{100} % 100 is a random guess of the total number of
+%references
+\bibitem{doulion} Tsourakakis, Charalampos E., et al. "Doulion: counting triangles in massive graphs with a coin." \emph{Proceedings of the 15th ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2009.
+\end{thebibliography}
+
+% \input{appendix}
+
+\end{document}
