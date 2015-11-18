@@ -1,0 +1,14 @@
+############################# Useful websites ##################################
+
+* Sample project:
+        http://lair.berkeley.edu/ellahi/
+
+* Bootstrap Library (CSS):
+        http://getbootstrap.com
+
+* Data Visualization Library (JavaScript):
+        http://d3js.org
+        https://github.com/mbostock/d3
+
+
+################################################################################
