@@ -1,15 +1,17 @@
-# cse549
+# CSE549
 
 This is README file for Course Project CSE-549
-Topic: UI for RNA-seq quantification
-Professor: Rob Patro
-Due Date: Dec 16, 2015
-Students:
-Name | SBU ID | email
-xxx
-xxx
-xxx
-Jian Yang | 110168771 | yang16@cs.stonybrook.edu
+
+* Topic: UI for RNA-seq quantification
+* Professor: Rob Patro
+* Due Date: Dec 16, 2015
+* Students:
+|Name          |   SBU ID      |        Email               |
+|--------------|:-------------:|:--------------------------:|
+| Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |
+| Hongjin Zhu  |  xxxxxxxxx    |                            |
+| Jianglin Wu  |  xxxxxxxxx    |                            |
+| Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |
 
 Resource:
 ############################# Useful websites ##################################
@@ -39,5 +41,6 @@ Given the appropriate input (a set of abundance estimates — one of which may b
 4. Remaining credit will be granted for useful and interesting visualizations and metrics that you come up with.
 
 The goal here is really to provide an interactive, aesthetically pleasing, and useful tool for the interactive exploration of RNA-seq abundance estimation results.
+
 
 
