@@ -6,6 +6,7 @@ This is README file for Course Project CSE-549
 * Professor: Rob Patro
 * Due Date: Dec 16, 2015
 * Students:
+
 |Name          |   SBU ID      |        Email               |
 |--------------|:-------------:|:--------------------------:|
 | Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |
@@ -14,23 +15,30 @@ This is README file for Course Project CSE-549
 | Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |
 
 Resource:
-############################# Useful websites ##################################
+
+### Useful websites
 
 * Sample project:
+
         http://lair.berkeley.edu/ellahi/
         https://github.com/pachterlab/sleuth
 
 * Bootstrap Library (CSS):
+
+
+
         http://getbootstrap.com
 
 * Data Visualization Library (JavaScript):
+
+
+
         http://d3js.org
         https://github.com/mbostock/d3
         http://www.chartjs.org
 
-################################################################################
 
-Requirements:
+### Requirements:
 
 High throughput RNA-seq data contain millions of reads which are aligned/mapped to the reference transcriptome with a mapper.  Subsequently, a tool is used to report the expression level of different transcripts in the experimental sample corresponding to the reads. The output from the quantifier (such as RSEM) typically consists of many numerical results, and little visual aid to help interpret these results. In this project we aim to make a rich, interactive, web interface, which serves a data-exploration tool for the end-user (usually a Biologist or Bioinformatician).  The visualizations here should be interactive, implemented, most likely, using a javascript framework.
 
@@ -41,6 +49,3 @@ Given the appropriate input (a set of abundance estimates — one of which may b
 4. Remaining credit will be granted for useful and interesting visualizations and metrics that you come up with.
 
 The goal here is really to provide an interactive, aesthetically pleasing, and useful tool for the interactive exploration of RNA-seq abundance estimation results.
-
-
-
