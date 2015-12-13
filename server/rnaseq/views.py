@@ -6,7 +6,7 @@ from models import *
 import json
 
 data_path = "/Users/waigx/Downloads/cse509/"
-data_file_dict = {"kallisto": "kallisto.data",
+data_file_dict = {"kallisto": "k.data",
                   "rsem": "rsem.data",
                   "sailfish": "sailfish.data"}
 

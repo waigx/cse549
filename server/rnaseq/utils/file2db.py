@@ -26,7 +26,9 @@ def file2db(file_path, col_table, row_table, data_table):
                         attribute=row_items_entries[i],
                         value=float(entry[i+1])
                     )
+                    data_idx += 1
                 sys.stdout.write("\r%d%%" % (line_idx*100/len_data_lines))
                 sys.stdout.flush()
             data_table.objects.all().delete()
+            print data_entries
             data_table.objects.bulk_create(data_entries)
