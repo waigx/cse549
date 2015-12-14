@@ -35,6 +35,12 @@ class DataAnalyzor:
             algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
             self.all_res = self.all_res.join(algo_res)
 
+    def get_all_algos(self):
+        return self.algo_res.keys()
+
+    def get_algo_fields(self, algo):
+        return ['TPM', 'NumReads']
+
     def update_truth(self, truth_file):
         self.profile = truth_file
         self.load_data()
