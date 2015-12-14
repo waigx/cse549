@@ -1,0 +1,113 @@
+__author__ = 'Jian Yang'
+__date__ = '11/30/15'
+
+from ParsingUtils import *
+
+import pandas
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+
+import reg
+
+def median(lst):
+    return np.median(np.array(lst))
+
+class DataAnalyzor:
+    def __init__(self):
+        self.all_res = None
+        self.profile = 'config.pro'
+        self.stat_res = 'stat.res'
+
+        self.algo_res = {'sailfish':'quant.sf',
+                         'kallisto':'kall.tsv',
+                         'rsem':'rsem.result'}
+        self.algo_method = {'sailfish':readSailfish,
+                            'kallisto':readKallisto,
+                            'rsem':readRSEMTruth}
+
+    def load_data(self):
+        self.all_res = readTranscriptRes(self.stat_res)
+        truth = readProFile(self.profile, '_truth')
+        self.all_res = self.all_res.join(truth)
+
+        for algo_name, algo_resfile in self.algo_res.items():
+            algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
+            self.all_res = self.all_res.join(algo_res)
+
+    def update_truth(self, truth_file):
+        self.profile = truth_file
+        self.load_data()
+
+    def get_fields(self):
+        assert self.all_res is not None
+        return self.all_res.columns
+
+    def get_2col(self, colx, coly): # TODO: add name
+        names = np.array(self.all_res.index, dtype=str) # self.all_res.ix[:, 'Name'], dtype=str)
+        x = np.array(self.all_res.ix[:, colx], dtype=float)
+        y = np.array(self.all_res.ix[:, coly], dtype=float)
+        return names, x, y
+
+    def get_2col_wlinear(self, colx, coly):
+        names, x, y = self.get_2col(colx, coly)
+        p1, p2, err = reg.get_regression(x, y)
+        return names, x, y, p1, p2, err
+
+    def get_matrix(self):
+        matrix = {}
+        for algo_name in self.algo_res.keys():
+            tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
+            matrix[algo_name] = {'TPEF':tpef, 'TPME':tpme, 'MARD':mard, 'wMARD':wmard}
+        return matrix
+
+    def plot_scatter(self, colx, coly, figname):
+        self.all_res.plot(kind='scatter', x=colx, y=coly)
+        plt.savefig(figname)
+        plt.clf()
+
+    def _calculate_submatrix(self, nmx, nmy):
+        x = np.array(self.all_res.ix[:, nmx], dtype=float)
+        y = np.array(self.all_res.ix[:, nmy], dtype=float)
+
+        num_xplus = 0
+        sum_eii = 0
+        reis = []
+        sum_ardi = 0
+        sum_wmard = 0
+
+        for xi, yi in zip(x, y):
+            xi = xi / 2
+
+            ardi = 0 if xi + yi == 0 else abs(xi - yi) / (0.5 * (xi + yi))
+            sum_ardi += ardi
+            wmard = 0 if ardi == 0 else ardi * math.log(max(xi, yi), 2)
+            sum_wmard += wmard
+
+            if xi == 0:
+                continue
+
+            num_xplus += 1
+            rei = (xi - yi) * 1.0 / xi
+            # print xi, yi, rei
+            eii = 1 if abs(rei) > 0.1 else 0
+
+            sum_eii += eii
+            reis.append(rei)
+
+        tpef = sum_eii * 1.0 / num_xplus
+        tpme = median(reis)
+        mard = sum_ardi * 1.0 / len(x)
+        wmard = sum_wmard * 1.0 / len(x)
+        return tpef, tpme, mard, wmard
+
+
+if __name__ == '__main__':
+    datas = DataAnalyzor()
+    datas.load_data()
+
+    matrix = datas.get_matrix()
+    print matrix
+
+    names, x, y = datas.get_2col('GC_Cont', 'ExpFrac_truth')
+    print names, x, y
