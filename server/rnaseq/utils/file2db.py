@@ -4,6 +4,7 @@ import sys
 def file2db(file_path, col_table, row_table, data_table):
     print "importing", file_path
     with open(file_path) as ori_file:
+            print "reading file to memory..."
             file_lines = ori_file.readlines()
             len_data_lines = len(file_lines) - 1
             row_items = file_lines[0][:-1].split("\t")[1:]
@@ -29,6 +30,7 @@ def file2db(file_path, col_table, row_table, data_table):
                     data_idx += 1
                 sys.stdout.write("\r%d%%" % (line_idx*100/len_data_lines))
                 sys.stdout.flush()
+            print "\ndumping to database... "
             data_table.objects.all().delete()
-            print data_entries
+            print "import finished."
             data_table.objects.bulk_create(data_entries)

@@ -20,4 +20,5 @@ from rnaseq import views
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^import/', views.import_data),
+    url(r'^test/', views.test),
 ]
