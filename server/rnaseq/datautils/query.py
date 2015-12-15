@@ -17,18 +17,21 @@ def median(lst):
 class DataAnalyzor:
     def __init__(self):
         self.all_res = None
-        self.profile = os.path.dirname(os.path.realpath(__file__)) + '/config.pro'
         self.stat_res = os.path.dirname(os.path.realpath(__file__)) + '/stat.res'
 
+        self.algos = ['sailfish', 'kallisto', 'rsem', 'truth']
         self.algo_res = {'sailfish':os.path.dirname(os.path.realpath(__file__)) + '/quant.sf',
                          'kallisto':os.path.dirname(os.path.realpath(__file__)) + '/kall.tsv',
-                         'rsem':os.path.dirname(os.path.realpath(__file__)) + '/rsem.result'}
+                         'rsem':os.path.dirname(os.path.realpath(__file__)) + '/rsem.result',
+                         'truth':os.path.dirname(os.path.realpath(__file__)) + '/config.pro'}
         self.algo_method = {'sailfish':readSailfish,
                             'kallisto':readKallisto,
-                            'rsem':readRSEMTruth}
+                            'rsem':readRSEMTruth,
+                            'truth':readProFile}
         self.algo_fields = {'sailfish':[],
                             'kallisto':[],
-                            'rsem':[]}
+                            'rsem':[],
+                            'truth':[]}
         self.truth_field = []
         self.stat_field = []
         self.bar = {}
@@ -36,11 +39,6 @@ class DataAnalyzor:
     def load_data(self):
         self.all_res = readTranscriptRes(self.stat_res)
         self.stat_field = self.all_res.columns
-
-        truth = readProFile(self.profile, '_truth')
-        self.all_res = self.all_res.join(truth)
-
-        self.truth_field = truth.columns # [x[:x.find('_')] for x in truth.columns]
 
         for algo_name, algo_resfile in self.algo_res.items():
             algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
@@ -57,9 +55,13 @@ class DataAnalyzor:
 
             values = []
             for algo in all_algo:
-                values.append(self.all_res.ix[:, '%s_%s' % (field, algo)].sum())
+                fname = self._convert_col('%s_%s' % (field, algo))
+                if algo == 'truth' and field == 'TPM':
+                    values.append(self.all_res.ix[:, fname].sum() * 1000000)
+                else:
+                    values.append(self.all_res.ix[:, fname].sum())
 
-            index = np.arange(len(self.algo_res.keys()))
+            index = np.arange(len(all_algo))
             bar_width = 0.35
             plt.bar(index, values, bar_width,
                  alpha=0.4,
@@ -74,14 +76,11 @@ class DataAnalyzor:
     def get_bar_chart(self, field):
         return self.bar[field]
 
-    def get_truth_fields(self):
-        return self.truth_field
-
     def get_stat_fields(self):
         return self.stat_field
 
     def get_all_algos(self):
-        return self.algo_res.keys()
+        return self.algos
 
     def get_algo_fields(self, algo):
         return self.algo_fields[algo]
@@ -90,14 +89,24 @@ class DataAnalyzor:
         return [x for x in self.algo_fields['sailfish'] if x in self.algo_fields['kallisto'] and x in self.algo_fields['rsem']]
 
     def update_truth(self, truth_file):
-        self.profile = truth_file
+        self.algo_res['truth'] = truth_file
         self.load_data()
 
     def get_fields(self):
         assert self.all_res is not None
         return self.all_res.columns
 
+    def _convert_col(self, col):
+        if col.endswith('_truth'):
+            if col.startswith('NumReads'):
+                return 'SeqNum_truth'
+            elif col.startswith('TPM'):
+                return 'LibFrac_truth'
+        return col
+
     def get_2col(self, colx, coly): # TODO: add name
+        colx = self._convert_col(colx)
+        coly = self._convert_col(coly)
         names = np.array(self.all_res.index, dtype=str) # self.all_res.ix[:, 'Name'], dtype=str)
         x = np.array(self.all_res.ix[:, colx], dtype=float)
         y = np.array(self.all_res.ix[:, coly], dtype=float)
@@ -116,7 +125,9 @@ class DataAnalyzor:
 
     def get_matrix(self):
         matrix = []
-        for algo_name in self.algo_res.keys():
+        for algo_name in self.algos:
+            if algo_name == 'truth':
+                continue
             tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
             matrix.append({'':algo_name, 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
         return matrix
