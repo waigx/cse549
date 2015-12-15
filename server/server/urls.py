@@ -19,6 +19,9 @@ from rnaseq import views
 
 urlpatterns = [
     url(r'^$', views.main_view),
-    url(r'^get', views.get_data),
+    url(r'^get$', views.get_data),
+    url(r'^test', views.test),
+    url(r'^matrix$', views.get_matrix),
+    url(r'^get_common$', views.get_common_attr),
     url(r'^admin/', include(admin.site.urls)),
 ]

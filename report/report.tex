@@ -97,28 +97,61 @@ Jian Yang \\
 \maketitle
 
 \begin{abstract}
-Write the abstraction Here
+RNA sequencing, is a technology that uses the capabilities of next-generation sequencing to reveal a snapshot of RNA presence and quantity from a genome at a given moment in time. There are many modern algorithms for RNA-seq but there is few visualization about the algorithms' results. Based on this status, we implemented a UI for RNA-Seq quality comparison between various of algorithms. The UI could upload results from algorithms, generate plots and tables for quality metrics and a user could interactively view any data on the plots.
 \end{abstract}
 
 \thispagestyle{empty}
-\newpage
-\addtocounter{page}{-1}
+\addtocounter{page}{0}
 
-\input{intro.tex}
-\newpage
-\input{jian_part.tex}
-\newpage
-% \input{mainalg}
-% \input{backpointers}
-% \input{expander}
-% \input{toplevel}
-% \input{closing}\newpage
-\section{Conclusion}
-Write the conclusion here
+\section {Introduction}
+
+\section {UI Architecture}
+We implemented this from four components: backend scripts, server, front-end, webpage. \\
+\subsection {Backend scripts}
+At backend scripts, we did the following jobs.
+\begin{enumerate}
+\item Calculate the statistics from the transcript. \\
+We calculate the data such as GC content, ration of each nucleotides.
+\item Load data from result files for algorithms and also the ground truth from profile files according to given parser.
+\item Concat the data of results, the ground truth and the statistics based on transcript name as index to a large table.
+\item Provide the API to query the data for UI layers.
+\item Calculate the performance evaluation matrix.
+\end{enumerate}
+The API contains the following methods.
+
+\section {UI Features}
+We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
+\subsection {Bar Chart for algorithms}
+We support the bar chart for all the algorithms to calculate the number of reads for each algorithm mapped in the experiment. One example is showed in figure \ref{fig_barchart_numreads}.
+
+\subsection {Scatter Plot for a Single Algorithm}
+For a single algorithm, we support the scatter plot about any two values such as transcript GC content versus abundance estimates. To plot a scatter plot, the user could go to the scatter plot for single algorithm page, choose an algorithm and the x-axis feature and the y-axis feature. With such a plot, every node on the scatter plot is one transcript and the coordinate is the chosen value pairs and as one example, the scatter plot for sailfish is showed in figure \ref{fig_single_algo_sailfish}. \\
+For an interactive mode, you could move the mouse to a node you want to view and the information would automatically showed as in figure \ref{fig_interactive_single_algo}.
+
+\subsection {Scatter Plot for two Algorithms on the same metrics}
+We could also compare two algorithms based on the same scatter plots. For example, we could compare the distribution between GC Content and Number of Reads for both Sailfish and Kallisto, as showed in figure \ref{fig_two_algo}.
+
+\subsection {Scatter Plot for two Algorithms on the same feature}
+The same features from two algorithms are also comparable. For example, Number of Reads for both Sailfish and Kallisto. We expected they are similar if both of them are goo algorithms. And we could also compare it with the ground truth.
+
+\subsection {Performance Evaluation}
+We could also calculate the performance evluation based on ground truth. The ground truth could be uploaded at upload page showed (??add a figure or not???). \\
+By given the ground truth, we now could calculate the following metrics: Spearman corr., TPEF, TPME, MARD, wMARD \cite{rapmap}.
+
+\section {Extensibility}
+\subsection {Upload new data}
+Currently the uploading of ground truth is added to re-calculate the performance evaluation results. \\
+We also considered the extensibility in our implementation. Currently the result files are directly uploaded to the server side and by upload and rename to the targeted name, call $DataAnalyzor.load_data()$, the server could reload all data to replace the old metrics.
+\subsection {Add new algorithm}
+To add a new algorithm, one just need to add a related method in $AnalyzorBuilder$  with the corresponding result file, parsing method same as in file $ParsingUtility.py$ and the new algorithm could automatically be supported by the whole framework. \\
+At both the front-end and back-end, the algorithms are queried from the $DataAnalyzor$. Once the algorithms and the corresponding methods for reading the data in, the new algorithm and the data would be showed as same as other old features.
+\subsection {Add Features to compare}
+Currently we support a wide range of comparison: all possible pairs of \\
+
 
 \section{Acknowledge}
 Thanks and regards to Professor Rob Patro's lectures. We were inspired by the algorithms and the vivid examples. \\
-Thanks and regards to TA Hirak. He helped us a lot in the project.
+Thanks and regards to TA Hirak. He helped us a lot on the project.
 
 % \bibliographystyle{plain}	% (uses file "plain.bst")
 % \bibliography{literature}
@@ -127,7 +160,7 @@ Thanks and regards to TA Hirak. He helped us a lot in the project.
 % \section{References}
 \begin{thebibliography}{100} % 100 is a random guess of the total number of
 %references
-\bibitem{doulion} Tsourakakis, Charalampos E., et al. "Doulion: counting triangles in massive graphs with a coin." \emph{Proceedings of the 15th ACM SIGKDD international conference on Knowledge discovery and data mining.} ACM, 2009.
+\bibitem{rapmap} Srivastava, Avi, Hirak Sarkar, and Rob Patro. "RapMap: A Rapid, Sensitive and Accurate Tool for Mapping RNA-seq Reads to Transcriptomes." \emph{bioRxiv} (2015): 029652.
 \end{thebibliography}
 
 % \input{appendix}

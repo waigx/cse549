@@ -62,7 +62,7 @@
                             <a href="bar_chart.html"><i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Scatter Plots<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-magic fa-fw"></i> Scatter Plots<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="single_algorithm.html">Single Algorithm</a>
@@ -86,7 +86,7 @@
                         </li> 
 						-->
                         <li>
-                            <a href="/"><i class="fa fa-edit fa-fw"></i>Import Data</a>
+                            <a href="/"><i class="fa fa-cloud-download fa-fw"></i>Import Data</a>
                         </li>
                         
 						
@@ -112,10 +112,19 @@
                             ###Bar Chart Introduction......
                         </div>
                         <!-- /.panel-heading -->
+
                         <div class="panel-body">
-                            
-							<p>###put bar chart here</p>
-                        
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span id="alg-selected">Please Choose Algorithm</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul id="alg-selection" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                </ul>
+                            </div>
+                            <div id="alg-img" >
+                            </div>
+
 						</div>
                         <!-- /.panel-body -->
             </div>
@@ -141,6 +150,43 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
+    <script>
+        $( document ).ready(function() {
+            var json_query_obj = {
+                type: 'matrix'
+            };
+            $.ajax({
+                url: '/get_common',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(json_query_obj),
+                dataType: 'json',
+                success: function(result) {
+                    var item;
+                    for (item in result['data']){
+                        $("#alg-selection").append("<li><a href=\"#\">"+ result['data'][item] +"</a></li>");
+                    }
+                    $('#alg-selection li').on('click', function(){
+                        $('#alg-selected').text($(this).text());
+                        var img = $("<img class=\"center-block\" width=\"75%\"/>").attr('src', '/static/img/'+ $(this).text() + "_bar.png")
+                                .on('load', function() {
+                                    if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+                                        alert('broken image!');
+                                    } else {
+                                        $("#alg-img").html(img);
+                                    }
+                                });
+                    });
+
+                },
+                error: function(result){
+                    console.log(result);
+                }
+            });
+
+        });
+
+    </script>
 </body>
 
 </html>
