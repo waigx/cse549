@@ -43,38 +43,77 @@ def get_data(request):
         if request_body['type'] == 'algorithm':
             json_obj['data'] = []
             algs = da.get_all_algos()
-
             try:
                 for alg in algs:
                     if request_body['pictype'] == '1':
                         alg_field = list(da.get_algo_fields(alg))
-                    else:
+                        alg_field += list(da.get_stat_fields())
+                    elif request_body['pictype'] == '2':
                         alg_field = list(da.get_algo_fields_common())
                         alg_field += list(da.get_stat_fields())
+                    else:
+                        alg_field = list(da.get_algo_fields_common())
                     json_obj['data'] += [{"alg":alg, "attrs":alg_field}]
             except:
                 return JsonResponse(json_obj)
 
         elif request_body['type'] == 'data':
             except_lst = list(da.get_stat_fields())
-            try:
-                query_col1 = request_body['x'] if request_body['x'] in except_lst \
-                             else request_body['x'] + "_" + request_body['alg']
-                query_col2 = request_body['y'] if request_body['y'] in except_lst \
-                             else request_body['y'] + "_" + request_body['alg']
-                raw_data = da.get_2col(query_col1, query_col2)
-            except:
-                return JsonResponse(json_obj)
+            if request_body['pictype'] == '1':
+                try:
+                    query_col1 = request_body['x'] if request_body['x'] in except_lst \
+                                 else request_body['x'] + "_" + request_body['alg']
+                    query_col2 = request_body['y'] if request_body['y'] in except_lst \
+                                 else request_body['y'] + "_" + request_body['alg']
+                    raw_data = da.get_2col(query_col1, query_col2)
+                except:
+                    return JsonResponse(json_obj)
 
-            obj_data_len = len(raw_data[0])
-            obj_data = [None] * obj_data_len
-            for i in xrange(obj_data_len):
-                obj_data[i] = {
-                    'name': raw_data[0][i],
-                    query_col1: raw_data[1][i],
-                    query_col2: raw_data[2][i]
-                }
-            json_obj['data'] = obj_data
+                obj_data_len = len(raw_data[0])
+                obj_data = [None] * obj_data_len
+                for i in xrange(obj_data_len):
+                    obj_data[i] = {
+                        'name': raw_data[0][i],
+                        query_col1: raw_data[1][i],
+                        query_col2: raw_data[2][i]
+                    }
+            if request_body['pictype'] == '2':
+                try:
+                    query1_col1 = request_body['x'] if request_body['x'] in except_lst \
+                                 else request_body['x'] + "_" + request_body['alg1']
+                    query1_col2 = request_body['y'] if request_body['y'] in except_lst \
+                                 else request_body['y'] + "_" + request_body['alg1']
+                    raw_data1 = da.get_2col(query1_col1, query1_col2)
+                except:
+                    return JsonResponse(json_obj)
+                try:
+                    query2_col1 = request_body['x'] if request_body['x'] in except_lst \
+                                 else request_body['x'] + "_" + request_body['alg2']
+                    query2_col2 = request_body['y'] if request_body['y'] in except_lst \
+                                 else request_body['y'] + "_" + request_body['alg2']
+                    raw_data2 = da.get_2col(query2_col1, query2_col2)
+                except:
+                    return JsonResponse(json_obj)
+
+                obj_data_len1 = len(raw_data1[0])
+                obj_data1 = [None] * obj_data_len1
+                for i in xrange(obj_data_len1):
+                    obj_data1[i] = {
+                        'alg': request_body['alg1'],
+                        'name': raw_data1[0][i],
+                        query1_col1: raw_data1[1][i],
+                        query1_col2: raw_data1[2][i]
+                    }
+                obj_data_len2 = len(raw_data2[0])
+                obj_data2 = [None] * obj_data_len2
+                for i in xrange(obj_data_len2):
+                    obj_data2[i] = {
+                        'alg': request_body['alg2'],
+                        'name': raw_data2[0][i],
+                        query2_col1: raw_data2[1][i],
+                        query2_col2: raw_data2[2][i]
+                    }
+            json_obj['data'] = obj_data1 + obj_data2
 
         elif request_body['type'] == 'data1':
             except_lst = list(da.get_stat_fields())
