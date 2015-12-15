@@ -31,6 +31,7 @@ class DataAnalyzor:
                             'rsem':[]}
         self.truth_field = []
         self.stat_field = []
+        self.bar = {}
 
     def load_data(self):
         self.all_res = readTranscriptRes(self.stat_res)
@@ -45,6 +46,33 @@ class DataAnalyzor:
             algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
             self.all_res = self.all_res.join(algo_res)
             self.algo_fields[algo_name] = [x[:x.find('_')] for x in algo_res.columns]
+
+        self.build_bar_chart()
+
+    def build_bar_chart(self):
+        for field in self.get_algo_fields_common():
+            self.bar[field] = os.path.dirname(os.path.realpath(__file__)) + '/%s_bar.png' % (field)
+
+            all_algo = self.get_all_algos()
+
+            values = []
+            for algo in all_algo:
+                values.append(self.all_res.ix[:, '%s_%s' % (field, algo)].sum())
+
+            index = np.arange(len(self.algo_res.keys()))
+            bar_width = 0.35
+            plt.bar(index, values, bar_width,
+                 alpha=0.4,
+                 color='b',
+                 label=field)
+            plt.xticks(index + bar_width / 2.0, all_algo)
+            plt.xlabel('Algorithms')
+            plt.ylabel(field)
+            plt.savefig(self.bar[field])
+            plt.clf()
+
+    def get_bar_chart(self, field):
+        return self.bar[field]
 
     def get_truth_fields(self):
         return self.truth_field
@@ -73,6 +101,12 @@ class DataAnalyzor:
         names = np.array(self.all_res.index, dtype=str) # self.all_res.ix[:, 'Name'], dtype=str)
         x = np.array(self.all_res.ix[:, colx], dtype=float)
         y = np.array(self.all_res.ix[:, coly], dtype=float)
+
+        if colx.startswith('TPM') or coly.startswith('TPM'):
+            if colx == 'LibFrac_truth':
+                x = x * 1000000
+            elif coly == 'LibFrac_truth':
+                y = y * 1000000
         return names, x, y
 
     def get_2col_wlinear(self, colx, coly):
@@ -141,3 +175,4 @@ if __name__ == '__main__':
     print datas.get_algo_fields('sailfish')
     print datas.get_algo_fields_common()
     print datas.get_stat_fields()
+    print datas.get_bar_chart('NumReads')
