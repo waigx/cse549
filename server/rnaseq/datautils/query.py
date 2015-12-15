@@ -70,7 +70,6 @@ class DataAnalyzor:
             plt.ylabel(field)
             plt.savefig(self.bar[field])
             plt.clf()
-        print self.bar
 
     def get_bar_chart(self, field):
         return self.bar[field]
