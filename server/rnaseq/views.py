@@ -77,7 +77,7 @@ def get_data(request):
             try:
                 query_col1 = request_body['attr1'] if request_body['attr1'] in except_lst else request_body['attr1'] + "_" + request_body['alg1']
                 query_col2 = request_body['attr2'] if request_body['attr2'] in except_lst else request_body['attr2'] + "_" + request_body['alg2']
-                raw_data = da.get_2col(query_col1, query_col2)
+                raw_data = da.get_2col_wlinear(query_col1, query_col2)
             except:
                 return JsonResponse(json_obj)
             obj_data_len = len(raw_data[0])
@@ -89,6 +89,10 @@ def get_data(request):
                     query_col2: raw_data[2][i]
                 }
             json_obj['data'] = obj_data
+            json_obj['regression'] = {
+                'p1': {'x':raw_data[3][0], 'y':raw_data[3][1]},
+                'p2': {'x':raw_data[4][0], 'y':raw_data[4][1]},
+                'error': list(raw_data[5])[0]}
         return JsonResponse(json_obj)
     else:
         return HttpResponse("Access method must be POST.")
@@ -102,3 +106,9 @@ def get_matrix(request):
 def get_common_attr(request):
     json_obj = {'data': da.get_algo_fields_common()}
     return JsonResponse(json_obj)
+
+
+def test(request):
+    print da.get_2col_wlinear('TPM_sailfish', 'TPM_rsem')
+    return HttpResponse("Access method must be POST.")
+
