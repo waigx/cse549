@@ -51,7 +51,7 @@ class DataAnalyzor:
 
     def build_bar_chart(self):
         for field in self.get_algo_fields_common():
-            self.bar[field] = os.path.dirname(os.path.realpath(__file__)) + '/%s_bar.png' % (field)
+            self.bar[field] = os.path.dirname(os.path.realpath(__file__ + "/../../")) + '/static/img/%s_bar.png' % (field)
 
             all_algo = self.get_all_algos()
 
@@ -115,10 +115,10 @@ class DataAnalyzor:
         return names, x, y, p1, p2, err
 
     def get_matrix(self):
-        matrix = {}
+        matrix = []
         for algo_name in self.algo_res.keys():
             tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
-            matrix[algo_name] = {'TPEF':tpef, 'TPME':tpme, 'MARD':mard, 'wMARD':wmard}
+            matrix.append({'':algo_name, 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
         return matrix
 
     def plot_scatter(self, colx, coly, figname):
