@@ -30,6 +30,7 @@ da = DataAnalyzor()
 
 def main_view(request):
     da.load_data()
+    da.build_bar_chart()
     return HttpResponse("<h1>Data Loaded.</h1>")
 
 
