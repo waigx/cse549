@@ -42,7 +42,7 @@ def get_data(request):
             algs = da.get_all_algos()
             for alg in algs:
                 alg_field = da.get_algo_fields(alg)
-                json_obj['data'] += [{"alg":alg}, {"attrs":alg_field}]
+                json_obj['data'] += [{"alg":alg, "attrs":alg_field}]
         elif request_body['type'] == 'alg_attr':
             raw_field = da.get_algo_fields(request_body['alg'])
             json_obj['data'] = raw_field
