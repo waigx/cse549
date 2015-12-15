@@ -34,7 +34,7 @@ class DataAnalyzor:
 
     def load_data(self):
         self.all_res = readTranscriptRes(self.stat_res)
-        self.stat_field = [x[:x.find('_')] for x in self.all_res.columns]
+        self.stat_field = self.all_res.columns
 
         truth = readProFile(self.profile, '_truth')
         self.all_res = self.all_res.join(truth)
@@ -140,3 +140,4 @@ if __name__ == '__main__':
 
     print datas.get_algo_fields('sailfish')
     print datas.get_algo_fields_common()
+    print datas.get_stat_fields()
