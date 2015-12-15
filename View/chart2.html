@@ -36,7 +36,10 @@ body {
 <body>
   <div>
   <div>This is the test for picture 1</div>
-  <select id = "algorithm_type">
+  <select id = "algorithm_type_1">
+    <option value="0">Please choose algorithm</option>
+  </select>
+  <select id = "algorithm_type_2">
     <option value="0">Please choose algorithm</option>
   </select>
   <select id="x_attr">
@@ -48,15 +51,16 @@ body {
   <button type="button" id="submit_button">submit</button>
 </div>
 <div id="chart"></div>
-<input id="pic_type_text" type="hidden" value = "1">
+<input id="pic_type_text" type="hidden" value = "2">
 <script>
 $( document ).ready(function() {
     console.log( "ready!" );
-    dropDownList("1");
+    dropDownList("2");
     $("#submit_button").click(submit_pic);
     $("#algorithm_type").change(getAxisAttr); 
 });
 </script>
+
 <script src="data.js"></script>
 <script src="chart.js"></script>
 <script src="dropDownList.js"></script>

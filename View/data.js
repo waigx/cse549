@@ -1,11 +1,11 @@
-function getData(){
+function getData(pictype){
 
 var json_query_obj = {
     type: 'data',
     alg:$("#algorithm_type option:selected").val(),
     x:$("#x_attr option:selected").val(),
     y:$("#y_attr option:selected").val(),
-    pictype: '1'
+    pictype: pictype
 };
 
 $.ajax({
@@ -28,11 +28,5 @@ $.ajax({
 
 
 
-$( document ).ready(function() {
-    console.log( "ready!" );
-    dropDownList();
-    $("#submit_button").click(submit_pic);
-    $("#algorithm_type").change(getAxisAttr);
-    
-});
+
 

@@ -1,8 +1,8 @@
-function dropDownList(){
+function dropDownList(pictype){
 
 	var json_query_obj = {
         type: 'algorithm',
-		pictype: '1'
+		pictype: pictype
 	};
 
 
@@ -25,7 +25,14 @@ $.ajax({
 */
     	$.each(result, function( nameScope, algoType){
       		$.each(algoType, function(i, algoAttr){
-      			$('#algorithm_type').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
+      			if(pictype == 1){
+      				$('#algorithm_type').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
+      			}else if(pictype == 2){
+      				$('#algorithm_type_1').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
+      				$('#algorithm_type_2').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
+      			}else if(pictype == 3){
+
+      			}
       			
       			/*$.each(algoAttr.attrs, function(j, algoAttrItem){
       				console.log("The j is:"+j + " the algoAttrItem is: " + algoAttrItem);
@@ -47,12 +54,12 @@ function getAxisAttr(){
     $("#y_attr").empty();
     $('#x_attr').append('<option value="0">Please choose x attribute</option>'); 
     $('#y_attr').append('<option value="0">Please choose y attribute</option>'); 
-
+    var pictype = $("#pic_type_text").val();
 
 
     var json_query_obj = {
         type: 'algorithm',
-		pictype: '1'
+		pictype: pictype
     };
     $.ajax({
     url: 'http://127.0.0.1:8000/get',
@@ -77,27 +84,53 @@ function getAxisAttr(){
 });
 }
 
-function checkPicInfo(){
-    var algo = $( "#algorithm_type option:selected" ).val(); 
-    var x_attr = $("#x_attr option:selected").val();
-    var y_attr = $("#y_attr option:selected").val();
+function checkPicInfo(pictype){
+	if(pictype == 1){
+		var algo = $("#algorithm_type option:selected").val(); 
+    	var x_attr = $("#x_attr option:selected").val();
+    	var y_attr = $("#y_attr option:selected").val();
 
-    if(algo == "0" || x_attr == "0" || y_attr == "0"){
-        alert("Selected items should within some value");
-        return false;
-    }
+    	if(algo == "0" || x_attr == "0" || y_attr == "0"){
+        	alert("Selected items should within some value");
+        	return false;
+    	}
 
-    if(x_attr == y_attr){
-        alert("x axis should be diferent from y axis");
-        return false;
-    }
+    	if(x_attr == y_attr){
+        	alert("x axis should be diferent from y axis");
+        	return false;
+    	}
+	}else if(pictype == 2){
+		var algo1 = $("#algorithm_type_1 option:selected").val(); 
+		var algo2 = $("#algorithm_type_2 option:selected").val(); 
+    	var x_attr = $("#x_attr option:selected").val();
+    	var y_attr = $("#y_attr option:selected").val();
+
+    	if(algo1 == "0" || algo2 == "0" || x_attr == "0" || y_attr == "0"){
+        	alert("Selected items should within some value");
+        	return false;
+    	}
+
+    	if(x_attr == y_attr){
+        	alert("x axis should be diferent from y axis");
+        	return false;
+    	}
+
+    	if(algo1 == algo2){
+    		alert("The input algorithm should not be the same.");
+    		return false;
+    	}
+	}else if(pictype == 3){
+
+	}
+    
 
     return true;
 }
 
 function submit_pic(){
-    if(checkPicInfo()){
-        getData();
+	var pictype = $("#pic_type_text").val();
+    if(checkPicInfo(pictype)){
+        getData(pictype);
     }
 }
 
