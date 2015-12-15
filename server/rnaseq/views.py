@@ -30,7 +30,6 @@ da = DataAnalyzor()
 
 def main_view(request):
     da.load_data()
-    da.build_bar_chart()
     return HttpResponse("<head><script language=\"javascript\"> "
                         "window.location.href = \"/static/index.html\""
                         "</script></head>"
@@ -97,4 +96,9 @@ def get_data(request):
 
 def get_matrix(request):
     json_obj = {'data': da.get_matrix()}
+    return JsonResponse(json_obj)
+
+
+def get_common_attr(request):
+    json_obj = {'data': da.get_algo_fields_common()}
     return JsonResponse(json_obj)
