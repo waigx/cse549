@@ -7,14 +7,18 @@
  info: Additional info attribute
 */
 function drawScatter(data, query_object,regression){
+d3.select("svg").remove();
 
 var currentTime = Date.now();
 console.log("test start");
 console.log("current time is:"+currentTime);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 30, left: 60},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
+
+var xName = query_object.x + "_" + query_object.alg;
+var yName = query_object.y + "_" + query_object.alg;
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -24,13 +28,13 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
  */ 
 
 // setup x 
-var xValue = function(d) { return d[query_object.x];}, // data -> value
+var xValue = function(d) { return d[xName];}, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return d[query_object.y];}, // data -> value
+var yValue = function(d) { return d[yName];}, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -40,7 +44,7 @@ var cValue = function(d) { return d[query_object.alg];},
     color = d3.scale.category10();
 
 // add the graph canvas to the body of the webpage
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -85,7 +89,7 @@ var tooltip = d3.select("body").append("div")
       .data(data)
     .enter().append("circle")
       .attr("class", "dot")
-      .attr("r", 1.5)
+      .attr("r", 3.5)
       .attr("cx", xMap)
       .attr("cy", yMap)
       .style("fill", function(d) { return color(cValue(d));}) 
@@ -143,7 +147,7 @@ var tooltip = d3.select("body").append("div")
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d;})
+      .text(function(d) { return query_object.alg;})
 
 var afterTime = Date.now();
 console.log("after time is:"+afterTime);
