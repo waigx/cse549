@@ -43,11 +43,11 @@ def get_data(request):
             for alg in algs:
                 alg_field = da.get_algo_fields(alg)
                 json_obj['data'] += [{"alg":alg, "attrs":alg_field}]
-        elif request_body['type'] == 'alg_attr':
-            raw_field = da.get_algo_fields(request_body['alg'])
-            json_obj['data'] = raw_field
         elif request_body['type'] == 'data':
-            raw_data = da.get_2col(request_body['x'] + "_" + request_body['alg'], request_body['y'] + "_" + request_body['alg'])
+            try:
+                raw_data = da.get_2col(request_body['x'] + "_" + request_body['alg'], request_body['y'] + "_" + request_body['alg'])
+            except:
+                return JsonResponse(json_obj)
             obj_data_len = len(raw_data[0])
             obj_data = [None] * obj_data_len
             for i in xrange(obj_data_len):
@@ -55,6 +55,20 @@ def get_data(request):
                     'name': raw_data[0][i],
                     request_body['x'] + "_" + request_body['alg']: raw_data[1][i],
                     request_body['y'] + "_" + request_body['alg']: raw_data[2][i]
+                }
+            json_obj['data'] = obj_data
+        elif request_body['type'] == 'data1':
+            try:
+                raw_data = da.get_2col(request_body['attr1'] + "_" + request_body['alg1'], request_body['attr2'] + "_" + request_body['alg2'])
+            except:
+                return JsonResponse(json_obj)
+            obj_data_len = len(raw_data[0])
+            obj_data = [None] * obj_data_len
+            for i in xrange(obj_data_len):
+                obj_data[i] = {
+                    'name': raw_data[0][i],
+                    request_body['attr1'] + "_" + request_body['alg1']: raw_data[1][i],
+                    request_body['attr2'] + "_" + request_body['alg2']: raw_data[2][i]
                 }
             json_obj['data'] = obj_data
         return JsonResponse(json_obj)
