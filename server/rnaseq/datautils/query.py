@@ -51,7 +51,7 @@ class DataAnalyzor:
 
     def build_bar_chart(self):
         for field in self.get_algo_fields_common():
-            self.bar[field] = os.path.dirname(os.path.realpath(__file__ + "/../../")) + '/static/%s_bar.png' % (field)
+            self.bar[field] = os.path.dirname(os.path.realpath(__file__ + "/../../")) + '/static/img/%s_bar.png' % (field)
 
             all_algo = self.get_all_algos()
 
