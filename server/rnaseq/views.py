@@ -31,7 +31,10 @@ da = DataAnalyzor()
 def main_view(request):
     da.load_data()
     da.build_bar_chart()
-    return HttpResponse("<h1>Data Loaded.</h1>")
+    return HttpResponse("<head><script language=\"javascript\"> "
+                        "window.location.href = \"/static/index.html\""
+                        "</script></head>"
+                        "<body>Data Loaded</body>")
 
 
 def get_data(request):
@@ -90,3 +93,8 @@ def get_data(request):
         return JsonResponse(json_obj)
     else:
         return HttpResponse("Access method must be POST.")
+
+
+def get_matrix(request):
+    json_obj = {'data': da.get_matrix()}
+    return JsonResponse(json_obj)

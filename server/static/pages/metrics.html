@@ -55,7 +55,7 @@
                 <a class="navbar-brand" href="index.html">UI for RNA-seq Quantification</a>
             </div>
 
-            <div class="navbar-default sidebar" role="navigation">
+            <div class="navbar-defresults_tableault sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
@@ -119,35 +119,7 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
+                                <table id="results_table" class="table table-striped table-bordered table-hover">
                                 </table>
                             </div>
                             <!-- /.table-responsive -->
@@ -176,7 +148,69 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
-    
+    <script>
+        var myList=[{"name" : "abc", "age" : 50},
+            {"age" : "25", "hobby" : "swimming"},
+            {"name" : "xyz", "hobby" : "programming"}];
+
+
+        function addAllColumnHeaders(mat_data)
+        {
+            var columnSet = [];
+            var headerTr$ = $('<tr/>');
+
+            for (var i = 0 ; i < mat_data.length ; i++) {
+                var rowHash = mat_data[i];
+                for (var key in rowHash) {
+                    if ($.inArray(key, columnSet) == -1){
+                        columnSet.push(key);
+                        headerTr$.append($('<th/>').html(key));
+                    }
+                }
+            }
+            $("#results_table").append(headerTr$);
+
+            return columnSet;
+        }
+
+        function buildHtmlTable(mat_data) {
+            var columns = addAllColumnHeaders(mat_data);
+
+            for (var i = 0 ; i < mat_data.length ; i++) {
+                var row$ = $('<tr/>');
+                for (var colIndex = 0 ; colIndex < columns.length ; colIndex++) {
+                    var cellValue = mat_data[i][columns[colIndex]];
+
+                    if (cellValue == null) { cellValue = ""; }
+
+                    row$.append($('<td/>').html(cellValue));
+                }
+                $("#results_table").append(row$);
+            }
+        }
+
+        $( document ).ready(function() {
+            var json_query_obj = {
+                type: 'matrix'
+            };
+
+            $.ajax({
+                url: '/matrix',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(json_query_obj),
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result['data']);
+                    buildHtmlTable(result['data']);
+                },
+                error: function(result){
+                    console.log(result);
+                }
+            });
+
+        });
+    </script>
 </body>
 
 </html>
