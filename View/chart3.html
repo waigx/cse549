@@ -35,29 +35,27 @@ body {
 </head>
 <body>
   <div>
-  <div>This is the test for picture 2</div>
+  <div>This is the test for picture 3</div>
   <select id = "algorithm_type_1">
     <option value="0">Please choose algorithm</option>
   </select>
   <select id = "algorithm_type_2">
     <option value="0">Please choose algorithm</option>
   </select>
-  <select id="x_attr">
-    <option value="0">Please choose x attribute</option>
-  </select>
-  <select id="y_attr">
-    <option value="0">Please choose y attribute</option>
+  <select id="algo_attr">
+    <option value="0">Please choose algorithm's attribute</option>
   </select>
   <button type="button" id="submit_button">submit</button>
 </div>
 <div id="chart"></div>
-<input id="pic_type_text" type="hidden" value = "2">
+<input id="pic_type_text" type="hidden" value = "3">
 <script>
 $( document ).ready(function() {
     console.log( "ready!" );
-    dropDownList("2");
+    dropDownList("3");
     $("#submit_button").click(submit_pic);
-    $("#algorithm_type").change(getAxisAttr); 
+    $("#algorithm_type_1").change(getAxisAttr); 
+    $("#algorithm_type_2").change(getAxisAttr);
 });
 </script>
 

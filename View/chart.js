@@ -6,7 +6,7 @@
  algorithm: algorithm name
  info: Additional info attribute
 */
-function drawScatter(data, query_object,regression){
+function drawScatter(data, query_object,regression, pictype){
 d3.select("svg").remove();
 
 var currentTime = Date.now();
@@ -17,8 +17,27 @@ var margin = {top: 20, right: 20, bottom: 30, left: 60},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var xName = query_object.x + "_" + query_object.alg;
-var yName = query_object.y + "_" + query_object.alg;
+var xName;
+var xAxis_name;
+var yName;
+var yAxis_name;
+var category;
+
+if(pictype == 1){
+  xName = query_object.x + "_" + query_object.alg;
+  yName = query_object.y + "_" + query_object.alg;
+  category = query_object.alg;
+  xAxis = query_object.x;
+  yAxis = query_object.y;
+}else if(pictype == 2){
+  // do something
+}else if(pictype == 3){
+  xName = query_object.attr1 + "_" + query_object.alg1;
+  yName = query_object.attr2 + "_" + query_object.alg2;
+  category = query_object.attr1;
+  xAxis = query_object.alg1;
+  yAxis = query_object.alg2;
+}
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -40,7 +59,7 @@ var yValue = function(d) { return d[yName];}, // data -> value
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 // setup fill color
-var cValue = function(d) { return d[query_object.alg];},
+var cValue = function(d) { return d[category];},
     color = d3.scale.category10();
 
 // add the graph canvas to the body of the webpage
@@ -70,7 +89,7 @@ var tooltip = d3.select("body").append("div")
       .attr("x", width)
       .attr("y", -6)
       .style("text-anchor", "end")
-      .text(query_object.x);
+      .text(xAxis_name);
 
   // y-axis
   svg.append("g")
@@ -82,7 +101,7 @@ var tooltip = d3.select("body").append("div")
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text(query_object.y);
+      .text(yAxis_name);
 
   // draw dots
   svg.selectAll(".dot")
@@ -111,7 +130,9 @@ var tooltip = d3.select("body").append("div")
 
   // draw linear chart
   if(regression != null){
-    var trendData = [[1,1,100,600]];
+    var p1 = regression.p1;
+    var p2 = regression.p2;
+    var trendData = [[p1.x,p1.y,p2.x,p2.y]];
 
     var trendline = svg.selectAll(".trendline")
       .data(trendData);
@@ -124,7 +145,7 @@ var tooltip = d3.select("body").append("div")
       .attr("x2", function(d) { return xScale(d[2]); })
       .attr("y2", function(d) { return yScale(d[3]); })
       .attr("stroke", "red")
-      .attr("stroke-width", 5);
+      .attr("stroke-width", 3);
   }
   
   // draw legend
@@ -147,7 +168,7 @@ var tooltip = d3.select("body").append("div")
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return query_object.alg;})
+      .text(function(d) { return category;})
 
 var afterTime = Date.now();
 console.log("after time is:"+afterTime);
