@@ -106,6 +106,18 @@ RNA sequencing, is a technology that uses the capabilities of next-generation se
 \section {Introduction}
 
 \section {UI Architecture}
+We implemented this from four components: backend scripts, server, front-end, webpage. \\
+\subsection {Backend scripts}
+At backend scripts, we did the following jobs.
+\begin{enumerate}
+\item Calculate the statistics from the transcript. \\
+We calculate the data such as GC content, ration of each nucleotides.
+\item Load data from result files for algorithms and also the ground truth from profile files according to given parser.
+\item Concat the data of results, the ground truth and the statistics based on transcript name as index to a large table.
+\item Provide the API to query the data for UI layers.
+\item Calculate the performance evaluation matrix.
+\end{enumerate}
+The API contains the following methods.
 
 \section {UI Features}
 We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
