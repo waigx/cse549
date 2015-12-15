@@ -1,17 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from utils.file2db import file2db
-import utils.dboperate as dbop
 from django.http import JsonResponse
-from models import *
+from datautils.query import DataAnalyzor
 import json
 
-data_path = "/Users/waigx/Downloads/cse509/"
-data_file_dict = {"kallisto": "kallisto.data",
-                  "rsem": "r.data",
-                  "sailfish": "sailfish.data"}
 
-
+'''
 def import_data(request):
     file2db(data_path+data_file_dict["kallisto"], KallistoEntryIDs, KallistoAttributes, KallistoData)
 #    file2db(data_path+data_file_dict["rsem"], RsemEntryIDs, RsemAttributes, RsemData)
@@ -29,3 +23,40 @@ def test(request):
     result = [(e[0]['entry_id'], e[1]['value'], e[2]['value']) for e in entries]
     print len(result)
     return HttpResponse("<h1>test page</h1>")
+'''
+
+da = DataAnalyzor()
+
+
+def main_view(request):
+    da.load_data()
+    return HttpResponse("<h1>Data Loaded.</h1>")
+
+
+def get_data(request):
+    if request.method == "POST":
+        json_obj = {}
+        request_body = json.loads(request.body)
+        if request_body['type'] == 'algorithm':
+            json_obj['data'] = []
+            algs = da.get_all_algos()
+            for alg in algs:
+                alg_field = da.get_algo_fields(alg)
+                json_obj['data'] += [{"alg":alg}, {"attrs":alg_field}]
+        elif request_body['type'] == 'alg_attr':
+            raw_field = da.get_algo_fields(request_body['alg'])
+            json_obj['data'] = raw_field
+        elif request_body['type'] == 'data':
+            raw_data = da.get_2col(request_body['x'] + "_" + request_body['alg'], request_body['y'] + "_" + request_body['alg'])
+            obj_data_len = len(raw_data[0])
+            obj_data = [None] * obj_data_len
+            for i in xrange(obj_data_len):
+                obj_data[i] = {
+                    'name': raw_data[0][i],
+                    request_body['x'] + "_" + request_body['alg']: raw_data[1][i],
+                    request_body['y'] + "_" + request_body['alg']: raw_data[2][i]
+                }
+            json_obj['data'] = obj_data
+        return JsonResponse(json_obj)
+    else:
+        return HttpResponse("Access method must be POST.")

@@ -7,6 +7,7 @@ import pandas
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import os
 
 import reg
 
@@ -16,12 +17,12 @@ def median(lst):
 class DataAnalyzor:
     def __init__(self):
         self.all_res = None
-        self.profile = 'config.pro'
-        self.stat_res = 'stat.res'
+        self.profile = os.path.dirname(os.path.realpath(__file__)) + '/config.pro'
+        self.stat_res = os.path.dirname(os.path.realpath(__file__)) + '/stat.res'
 
-        self.algo_res = {'sailfish':'quant.sf',
-                         'kallisto':'kall.tsv',
-                         'rsem':'rsem.result'}
+        self.algo_res = {'sailfish':os.path.dirname(os.path.realpath(__file__)) + '/quant.sf',
+                         'kallisto':os.path.dirname(os.path.realpath(__file__)) + '/kall.tsv',
+                         'rsem':os.path.dirname(os.path.realpath(__file__)) + '/rsem.result'}
         self.algo_method = {'sailfish':readSailfish,
                             'kallisto':readKallisto,
                             'rsem':readRSEMTruth}

@@ -1,6 +1,7 @@
 from django.db import models
 
 
+'''
 class KallistoAttributes(models.Model):
     attribute = models.CharField(max_length=32)
 
@@ -80,3 +81,4 @@ class SailfishData(models.Model):
     entry_id = models.ForeignKey(SailfishEntryIDs, on_delete=models.CASCADE)
     attribute = models.ForeignKey(SailfishAttributes, on_delete=models.CASCADE)
     value = models.FloatField(default=0.0)
+'''

@@ -18,7 +18,7 @@ from django.contrib import admin
 from rnaseq import views
 
 urlpatterns = [
+    url(r'^$', views.main_view),
+    url(r'^get', views.get_data),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^import/', views.import_data),
-    url(r'^test/', views.test),
 ]
