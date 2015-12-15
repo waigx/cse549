@@ -150,11 +150,11 @@ def readTranscriptRes(fn, suffix=""):
     df = pd.read_csv(fn, sep = '\t', skiprows=1,
                      names = ['Name',
                               'Length',
-                              'GC_Cont',
-                              'A_Cont',
-                              'T_Cont',
-                              'C_Cont',
-                              'G_Cont'])
+                              'GC_Content',
+                              'A_Content',
+                              'T_Content',
+                              'C_Content',
+                              'G_Content'])
     df.set_index('Name', inplace=True)
     df.convert_objects(convert_numeric=True)
     return df

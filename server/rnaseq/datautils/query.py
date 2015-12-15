@@ -26,21 +26,40 @@ class DataAnalyzor:
         self.algo_method = {'sailfish':readSailfish,
                             'kallisto':readKallisto,
                             'rsem':readRSEMTruth}
+        self.algo_fields = {'sailfish':[],
+                            'kallisto':[],
+                            'rsem':[]}
+        self.truth_field = []
+        self.stat_field = []
 
     def load_data(self):
         self.all_res = readTranscriptRes(self.stat_res)
+        self.stat_field = [x[:x.find('_')] for x in self.all_res.columns]
+
         truth = readProFile(self.profile, '_truth')
         self.all_res = self.all_res.join(truth)
+
+        self.truth_field = truth.columns # [x[:x.find('_')] for x in truth.columns]
 
         for algo_name, algo_resfile in self.algo_res.items():
             algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
             self.all_res = self.all_res.join(algo_res)
+            self.algo_fields[algo_name] = [x[:x.find('_')] for x in algo_res.columns]
+
+    def get_truth_fields(self):
+        return self.truth_field
+
+    def get_stat_fields(self):
+        return self.stat_field
 
     def get_all_algos(self):
         return self.algo_res.keys()
 
     def get_algo_fields(self, algo):
-        return ['TPM', 'NumReads']
+        return self.algo_fields[algo]
+
+    def get_algo_fields_common(self):
+        return [x for x in self.algo_fields['sailfish'] if x in self.algo_fields['kallisto'] and x in self.algo_fields['rsem']]
 
     def update_truth(self, truth_file):
         self.profile = truth_file
@@ -116,5 +135,8 @@ if __name__ == '__main__':
     matrix = datas.get_matrix()
     print matrix
 
-    names, x, y = datas.get_2col('GC_Cont', 'ExpFrac_truth')
+    names, x, y = datas.get_2col('GC_Content', 'ExpFrac_truth')
     print names, x, y
+
+    print datas.get_algo_fields('sailfish')
+    print datas.get_algo_fields_common()
