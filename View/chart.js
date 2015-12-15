@@ -1,43 +1,63 @@
 /*
- data: input data
- xName: x axis name
- yName: y axis name
- regression: regression linear spot[x1,y1, x2, y2]
- algorithm: algorithm name
- info: Additional info attribute
+  Partial reference:
+  D3js website scatter chart example:
+  http://bl.ocks.org/weiglemc/6185069
+
+  @data: input data, array list
+  @query_object: query information.
+  @regression: regression linear spot[x1,y1, x2, y2]
+  @pictype: chart type. There are 3 chart type:
+    1. User select one algorithm, display
+       x, y attribute which user choose.
+    2. User select two algorithm, display 
+       x, y attribute which user choose.
+    3. User select two algorithm, display
+       one attribute and relavent regression.
+
 */
 function drawScatter(data, query_object,regression, pictype){
-d3.select("svg").remove();
+  // clean svg canvas
+  d3.select("svg").remove();
 
-var currentTime = Date.now();
-console.log("test start");
-console.log("current time is:"+currentTime);
+  // Processed time check
+  var currentTime = Date.now();
+  console.log("test start");
+  console.log("current time is:"+currentTime);
 
-var margin = {top: 20, right: 20, bottom: 30, left: 60},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  // canvas width and height
+  var margin = {top: 20, right: 20, bottom: 30, left: 60},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
 
-var xName;
-var xAxis_name;
-var yName;
-var yAxis_name;
-var category;
+  // x attribute name
+  var xName;
+  // x axis name
+  var xAxis_name;
+  // y attribute name
+  var yName;
+  // y axis name
+  var yAxis_name;
+  // category name
+  var category;
 
-if(pictype == 1){
-  xName = query_object.x + "_" + query_object.alg;
-  yName = query_object.y + "_" + query_object.alg;
-  category = query_object.alg;
-  xAxis = query_object.x;
-  yAxis = query_object.y;
-}else if(pictype == 2){
-  // do something
-}else if(pictype == 3){
-  xName = query_object.attr1 + "_" + query_object.alg1;
-  yName = query_object.attr2 + "_" + query_object.alg2;
-  category = query_object.attr1;
-  xAxis = query_object.alg1;
-  yAxis = query_object.alg2;
-}
+  // Assign value
+  if(pictype == 1){
+    xName = query_object.x + "_" + query_object.alg;
+    yName = query_object.y + "_" + query_object.alg;
+    category = query_object.alg;
+    xAxis = query_object.x;
+    yAxis = query_object.y;
+  }else if(pictype == 2){
+    category = "alg";
+    xAxis_name = query_object.x;
+    yAxis_name = query_object.y;
+  }else if(pictype == 3){
+    xName = query_object.attr1 + "_" + query_object.alg1;
+    yName = query_object.attr2 + "_" + query_object.alg2;
+    category = query_object.attr1;
+    xAxis = query_object.alg1;
+    yAxis = query_object.alg2;
+  }
 
 /* 
  * value accessor - returns the value to encode for a given data object.
@@ -47,13 +67,27 @@ if(pictype == 1){
  */ 
 
 // setup x 
-var xValue = function(d) { return d[xName];}, // data -> value
+var xValue = function(d) { 
+      if(pictype == 2){
+          var xName_alg = query_object.x + "_" + d[category];
+          return d[xName_alg];
+      }else{
+          return d[xName];  
+      }
+    }, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
 
 // setup y
-var yValue = function(d) { return d[yName];}, // data -> value
+var yValue = function(d) { 
+      if(pictype == 2){
+          var yName_alg = query_object.y + "_" + d[category];
+          return d[yName_alg];
+      }else{
+        return d[yName];        
+      }
+    }, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -118,6 +152,7 @@ var tooltip = d3.select("body").append("div")
                .style("opacity", .9);
           tooltip.html(d["name"] + "<br/> (" + xValue(d) 
 	        + ", " + yValue(d) + ")" +"<br/>"+ "first info:"
+          + "<br/>"
           + "second info:")
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px"); 
@@ -153,7 +188,9 @@ var tooltip = d3.select("body").append("div")
       .data(color.domain())
     .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+      .attr("transform", function(d, i) { 
+        return "translate(0," + i * 20 + ")"; 
+      });
 
   // draw legend colored rectangles
   legend.append("rect")
@@ -168,7 +205,12 @@ var tooltip = d3.select("body").append("div")
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return category;})
+      .text(function(d) { 
+        if(pictype == 2){
+          return d;
+        }else{
+          return category;  
+        }})
 
 var afterTime = Date.now();
 console.log("after time is:"+afterTime);

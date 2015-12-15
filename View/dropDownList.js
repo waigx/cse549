@@ -1,3 +1,11 @@
+/*
+	This file including all function relavent to dropdown list.
+*/
+
+/*
+	Get dropdown list for input algorithm
+	@pictype: type of chart, details see <chart.js>
+*/
 function dropDownList(pictype){
 
 	var json_query_obj = {
@@ -5,49 +13,62 @@ function dropDownList(pictype){
 		pictype: pictype
 	};
 
-
-$.ajax({
-    url: 'http://127.0.0.1:8000/get',
-    type: 'POST',
-    contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify(json_query_obj),
-    dataType: 'json',
-    success: function(result) {
-     /*   console.log(result);
-        console.log("The length is:"+result.data.length);
-        for(i = 0; i < result.data.length; i ++){
-            console.log("This is the " + i + "th, and item is:"+result.data[i].alg);
-            console.log("Attr length is:"+ result.data[i].attrs.length);
-            for(j = 0; j < result.data[i].attrs.length; j ++){
-                console.log("attr " + j + "th: " + result.data[i].attrs[j]);
-            }
-        }
-*/
-    	$.each(result, function( nameScope, algoType){
-      		$.each(algoType, function(i, algoAttr){
-      			if(pictype == 1){
-      				$('#algorithm_type').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
-      			}else if(pictype == 2){
-      				$('#algorithm_type_1').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
-      				$('#algorithm_type_2').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
-      			}else if(pictype == 3){
-      				$('#algorithm_type_1').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
-      				$('#algorithm_type_2').append('<option value="' + algoAttr.alg + '">' + algoAttr.alg + '</option>'); 
-      			}
-      			
-      			/*$.each(algoAttr.attrs, function(j, algoAttrItem){
-      				console.log("The j is:"+j + " the algoAttrItem is: " + algoAttrItem);
-      			});*/
-      		});
-    	}); 
-    },
-    error: function(result){
-        console.log(result);
-    }
-});
+	$.ajax({
+	    url: 'http://127.0.0.1:8000/get',
+	    type: 'POST',
+	    contentType: 'application/json; charset=utf-8',
+	    data: JSON.stringify(json_query_obj),
+	    dataType: 'json',
+	    success: function(result) {
+	     /*   console.log(result);
+	        console.log("The length is:"+result.data.length);
+	        for(i = 0; i < result.data.length; i ++){
+	            console.log("This is the " + i + "th, and item is:"+result.data[i].alg);
+	            console.log("Attr length is:"+ result.data[i].attrs.length);
+	            for(j = 0; j < result.data[i].attrs.length; j ++){
+	                console.log("attr " + j + "th: " + result.data[i].attrs[j]);
+	            }
+	        }
+		*/
+	   	$.each(result, function( nameScope, algoType){
+	     	$.each(algoType, function(i, algoAttr){
+	     		if(pictype == 1){
+	     			$('#algorithm_type')
+	     				.append('<option value="' 
+	     					+ algoAttr.alg + '">' 
+	     					+ algoAttr.alg + '</option>'); 
+	     		}else if(pictype == 2){
+	     			$('#algorithm_type_1')
+	     				.append('<option value="' 
+	     					+ algoAttr.alg + '">' 
+	     					+ algoAttr.alg + '</option>'); 
+	   				$('#algorithm_type_2')
+	   					.append('<option value="' 
+	   						+ algoAttr.alg + '">' 
+	   						+ algoAttr.alg + '</option>'); 
+	   			}else if(pictype == 3){
+	     			$('#algorithm_type_1')
+	     				.append('<option value="' 
+	     					+ algoAttr.alg + '">' 
+	     					+ algoAttr.alg + '</option>'); 
+	     			$('#algorithm_type_2')
+	     				.append('<option value="' 
+	     					+ algoAttr.alg + '">' 
+	     					+ algoAttr.alg + '</option>'); 
+	     		}
+	     	});
+	   	}); 
+	   },
+	   error: function(result){
+	       console.log(result);
+	   }
+	});
 
 }
 
+/*
+	Get drop down list of attributes, according to input algorithm
+*/
 function getAxisAttr(){
 	console.log("Change algorithm");
 	var pictype = $("#pic_type_text").val();
@@ -55,25 +76,25 @@ function getAxisAttr(){
 	var selectAlgo = $(this).val();
 	var selectAlgoId = $(this).attr('id');
 
-	if(pictype == 1){
-		 // chart 1
+	if(pictype == 1 || pictype == 2){
     	$("#x_attr").empty();
     	$("#y_attr").empty();
 
-    	 // chart 1
-    	$('#x_attr').append('<option value="0">Please choose x attribute</option>'); 
-    	$('#y_attr').append('<option value="0">Please choose y attribute</option>'); 
-	}else if(pictype == 2){
-
+    	$('#x_attr')
+    		.append('<option value="0">Please choose x attribute</option>'); 
+    	$('#y_attr')
+    		.append('<option value="0">Please choose y attribute</option>'); 
 	}else if(pictype == 3){
 		$("#algo_attr").empty();
-		$('#algo_attr').append('<option value="0">Please choose algorithm\'s attribute</option>'); 
+		$('#algo_attr')
+			.append('<option value="0">Please choose algorithm\'s attribute</option>'); 
 	}
    
     var json_query_obj = {
         type: 'algorithm',
 		pictype: pictype
     };
+
     $.ajax({
     url: 'http://127.0.0.1:8000/get',
     type: 'POST',
@@ -84,13 +105,20 @@ function getAxisAttr(){
         $.each(result.data, function(i, algoAttr){
 			if(algoAttr.alg == selectAlgo){
                 $.each(algoAttr.attrs, function(j, algoAttrItem){
-                	if(pictype == 1){
-                		$('#x_attr').append('<option value="' + algoAttrItem + '">' + algoAttrItem + '</option>'); 
-                    	$('#y_attr').append('<option value="' + algoAttrItem + '">' + algoAttrItem + '</option>'); 	
-                	}else if(pictype == 2){
-						// do something
+                	if(pictype == 1 || pictype == 2){
+                		$('#x_attr')
+                			.append('<option value="' 
+                				+ algoAttrItem + '">' 
+                				+ algoAttrItem + '</option>'); 
+                    	$('#y_attr')
+                    		.append('<option value="' 
+                    			+ algoAttrItem + '">' 
+                    			+ algoAttrItem + '</option>'); 	
                 	}else if(pictype == 3){
-						$('#algo_attr').append('<option value="' + algoAttrItem + '">' + algoAttrItem + '</option>');
+						$('#algo_attr')
+							.append('<option value="' 
+								+ algoAttrItem + '">' 
+								+ algoAttrItem + '</option>');
 					}
                 });
             }
@@ -102,6 +130,9 @@ function getAxisAttr(){
 });
 }
 
+/*
+	Check user's selection
+*/
 function checkPicInfo(pictype){
 	if(pictype == 1){
 		var algo = $("#algorithm_type option:selected").val(); 
@@ -157,6 +188,9 @@ function checkPicInfo(pictype){
     return true;
 }
 
+/*
+	Button action
+*/
 function submit_pic(){
 	var pictype = $("#pic_type_text").val();
     if(checkPicInfo(pictype)){
