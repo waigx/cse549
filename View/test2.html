@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+
+<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
+<!-- Tooltip example from http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html -->
+
+<head>
+<style>
+body {
+  font: 11px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.tooltip {
+  position: absolute;
+  width: 100px;
+  height: 128px;
+  pointer-events: none;
+  background: lightsteelblue;
+}
+</style>
+<script src="d3.v3.min.js"></script>
+<script src="jquery-1.8.3.min.js"></script>
+</head>
+<body>
+  <div>
+  <div>This is the test for picture 1</div>
+  <select id = "algorithm_type">
+    <option value="0">Please choose algorithm</option>
+  </select>
+  <select id="x_attr">
+    <option value="0">Please choose x attribute</option>
+  </select>
+  <select id="y_attr">
+    <option value="0">Please choose y attribute</option>
+  </select>
+  <button type="button" id="submit_button">submit</button>
+</div>
+
+<script src="data.js"></script>
+<script src="chart.js"></script>
+<script src="dropDownList.js"></script>
+</body>
+</html>
