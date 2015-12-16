@@ -60,18 +60,18 @@
 \title{UI for RNA-seq quantification \footnote{Course Project Report of CSE 549.}}
 \author{
 %\alignauthor
-xxxx xxxxx\\
-       {\small SBU ID: xxxxxx}\\
+Yigong Wang\\
+       {\small SBU ID: 109973706}\\
        {\small Department of Computer Science}\\
        {\small Stony Brook University} \\
-       {\small \texttt{xxxxx@cs.stonybrook.edu}}
+       {\small \texttt{yigwang@cs.stonybrook.edu}}
 %\alignauthor
 \and
-xxxx xxxxx \\
-       {\small SBU ID: xxx}\\
+Hongjin Zhu \\
+       {\small SBU ID: 109748818}\\
        {\small Department of Computer Science}\\
        {\small Stony Brook University} \\
-       {\small \texttt{xxxxx@cs.stonybrook.edu}}
+       {\small \texttt{hozzhu@cs.stonybrook.edu}}
 %\alignauthor
 \and
 Jianglin Wu \\
@@ -189,24 +189,103 @@ Using Javascript to check user selections' validation. For example, user are not
 
 \end{enumerate}
 
+\section {Installation and Usage}
+
+This project provides a web-based user interface, which allows users access it locally or remotely. In this section, we give a brief introduction of installation. \\
+The project require following package/software: \\
+\begin{enumerate}
+\item Modern web browser\\
+A modern web browser is required for the user interface. Because the interactive and data visualisation are highly depend on JavaScripts libraries, the latest version browser is highly recommended for better efficiency and experience.\\
+\item Python 2.7.9 or later\\
+The website framework and data processing are based on Python programming language.\\
+\item Django\\
+Django provides a basic web server, as well as a web framework. It lays between browser and data. To install Django, using the command (Please note that you might need the administrator privilege, e.g. sudo before pip command):
+pip install django\\
+\item django-cors-header\\
+django-cors-headers library enables cross sites recourse sharing of the server.
+pip install django-cors-headers\\
+\item pandas, scipy, matplotlib\\
+These libraries are used for data processing and bar charts plotting.
+pip install pandas scipy matplotlib\\
+
+\end{enumerate}
+To run the project, go to ‘server’ folder of the project, use following command: \\
+python manage.py runserver 8000 \\
+This command will run the server and listen to localhost port 8000. Next, open a browser then navigate to http://127.0.0.1:8000/. \\
 
 \section {UI Features}
 We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
 \subsection {Bar Chart for algorithms}
-We support the bar chart for all the algorithms to calculate the number of reads for each algorithm mapped in the experiment. One example is showed in figure \ref{fig_barchart_numreads}.
+We support the bar chart for all the algorithms to calculate the number of reads for each algorithm mapped in the experiment. One example is showed in figure \ref{fig:barchart_numreads}.
+
+\begin{figure}
+ \centering
+ \includegraphics[width=.6\linewidth]{./fig/barchar_numreads.jpg}
+ \caption{Bar Chart - NumReads}
+  \label{fig:barchart_numreads}
+\end{figure}
 
 \subsection {Scatter Plot for a Single Algorithm}
-For a single algorithm, we support the scatter plot about any two values such as transcript GC content versus abundance estimates. To plot a scatter plot, the user could go to the scatter plot for single algorithm page, choose an algorithm and the x-axis feature and the y-axis feature. With such a plot, every node on the scatter plot is one transcript and the coordinate is the chosen value pairs and as one example, the scatter plot for sailfish is showed in figure \ref{fig_single_algo_sailfish}. \\
-For an interactive mode, you could move the mouse to a node you want to view and the information would automatically showed as in figure \ref{fig_interactive_single_algo}.
+For a single algorithm, we support the scatter plot about any two values such as transcript GC content versus abundance estimates. To plot a scatter plot, the user could go to the scatter plot for single algorithm page, choose an algorithm and the x-axis feature and the y-axis feature. With such a plot, every node on the scatter plot is one transcript and the coordinate is the chosen value pairs and as one example, the scatter plot for sailfish is showed in figure \ref{fig:single_algo_sailfish}. \\
+For an interactive mode, you could move the mouse to a node you want to view and the information would automatically showed as in figure \ref{fig:interactive_single_algo_sailfish}.
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/single_algo_sailfish.jpg}
+\caption{Sailfish - NumReads}
+\label{fig:single_algo_sailfish}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/interactive_single_algo_sailfish.jpg}
+\caption{Sailfish - Interactive NumReads}
+\label{fig:interactive_single_algo_sailfish}
+\end{minipage}
+\end{figure}
+
 
 \subsection {Scatter Plot for two Algorithms on the same metrics}
-We could also compare two algorithms based on the same scatter plots. For example, we could compare the distribution between GC Content and Number of Reads for both Sailfish and Kallisto, as showed in figure \ref{fig_two_algo}.
+We could also compare two algorithms based on the same scatter plots. For example, we could compare the distribution between GC Content and Number of Reads for both Sailfish and Kallisto, as showed in figure \ref{fig:two_algo}.
+
+
 
 \subsection {Scatter Plot for two Algorithms on the same feature}
-The same features from two algorithms are also comparable. For example, Number of Reads for both Sailfish and Kallisto. We expected they are similar if both of them are goo algorithms. And we could also compare it with the ground truth.
+The same features from two algorithms are also comparable. For example, Number of Reads for both Sailfish and Kallisto. We expected they are similar if both of them are good algorithms (figure \ref{fig:compare_sk}). And we could also compare it with the ground truth (figure \ref{fig:compare_truth}).
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/compare_sk.jpg}
+\caption{Compare NumReads between Sailfish and Kallisto }
+\label{fig:compare_sk}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/compare_truth.jpg}
+\caption{Compare NumReads between ground truth and Kallisto  }
+\label{fig:compare_truth}
+\end{minipage}
+\end{figure}
 
 \subsection {Performance Evaluation}
-We could also calculate the performance evluation based on ground truth. The ground truth could be uploaded at upload page showed (??add a figure or not???). \\
+We could also calculate the performance evaluation based on ground truth. The ground truth could be uploaded at upload page showed in figure \ref{fig:metrics}
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/two_algo.jpg}
+\caption{Sailfish and Kallisto:  GCContent vs  NumReads }
+\label{fig:two_algo}
+\end{minipage}
+\quad
+\begin{minipage}[b]{0.47\linewidth}
+\includegraphics[width=1.0\textwidth]{./fig/metrics.jpg}
+  \caption{Performance Evaluation  }
+  \label{fig:metrics}
+\end{minipage}
+\end{figure}
+
 By given the ground truth, we now could calculate the following metrics: Spearman corr., TPEF, TPME, MARD, wMARD \cite{rapmap}.
 
 
