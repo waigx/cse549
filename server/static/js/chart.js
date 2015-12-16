@@ -16,8 +16,6 @@
 
 */
 function drawScatter(data, query_object,regression, pictype){
-  // clean svg canvas
-  d3.select("svg").remove();
 
   // Processed time check
   var currentTime = Date.now();
@@ -42,18 +40,20 @@ function drawScatter(data, query_object,regression, pictype){
 
   // Assign value
   if(pictype == 1){
-    xName = query_object.x + "_" + query_object.alg;
-    yName = query_object.y + "_" + query_object.alg;
+    xName = query_object.x;
+    yName = query_object.y;
     category = query_object.alg;
     xAxis = query_object.x;
     yAxis = query_object.y;
   }else if(pictype == 2){
     category = "alg";
+    xName = query_object.x;
+    yName = query_object.y;
     xAxis_name = query_object.x;
     yAxis_name = query_object.y;
   }else if(pictype == 3){
-    xName = query_object.attr1 + "_" + query_object.alg1;
-    yName = query_object.attr2 + "_" + query_object.alg2;
+    xName = query_object.attr1;
+    yName = query_object.attr1;
     category = query_object.attr1;
     xAxis = query_object.alg1;
     yAxis = query_object.alg2;
@@ -68,12 +68,7 @@ function drawScatter(data, query_object,regression, pictype){
 
 // setup x 
 var xValue = function(d) { 
-      if(pictype == 2){
-          var xName_alg = query_object.x + "_" + d[category];
-          return d[xName_alg];
-      }else{
           return d[xName];  
-      }
     }, // data -> value
     xScale = d3.scale.linear().range([0, width]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
@@ -81,19 +76,16 @@ var xValue = function(d) {
 
 // setup y
 var yValue = function(d) { 
-      if(pictype == 2){
-          var yName_alg = query_object.y + "_" + d[category];
-          return d[yName_alg];
-      }else{
         return d[yName];        
-      }
     }, // data -> value
     yScale = d3.scale.linear().range([height, 0]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 // setup fill color
-var cValue = function(d) { return d[category];},
+var cValue = function(d) { 
+    return d[category];  
+  },
     color = d3.scale.category10();
 
 // add the graph canvas to the body of the webpage
@@ -149,7 +141,7 @@ var tooltip = d3.select("body").append("div")
       .on("mouseover", function(d) {
           tooltip.transition()
                .duration(200)
-               .style("opacity", .9);
+               .style("opacity", .5);
           tooltip.html(d["name"] + "<br/> (" + xValue(d) 
 	        + ", " + yValue(d) + ")" +"<br/>"+ "first info:"
           + "<br/>"
