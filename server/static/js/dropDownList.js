@@ -196,7 +196,10 @@ function submit_pic(){
   	d3.select("svg").remove();
 	var pictype = $("#pic_type_text").val();
     if(checkPicInfo(pictype)){
+    	// mark onloading
+    	$("#chart").append("<div class=\"onloading_icon\" style=\"font-style: oblique;\">On loading charts...</div>");
         getData(pictype);
+
     }
 }
 
