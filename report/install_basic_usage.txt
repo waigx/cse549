@@ -1,0 +1,23 @@
+Installation and usage
+This project provides a web-based user interface, which allows users access it locally or remotely. In this section, we give a brief introduction of installation.
+The project require following package/software:
+1. Modern web browser
+A modern web browser is required for the user interface. Because the interactive and data visualisation are highly depend on JavaScripts libraries, the latest version browser is highly recommended for better efficiency and experience.
+2. Python 2.7.9 or later
+The website framework and data processing are based on Python programming language.
+3. Django
+Django provides a basic web server, as well as a web framework. It lays between browser and data. To install Django, using the command (Please note that you might need the administrator privilege, e.g. sudo before pip command):
+pip install django
+
+4. django-cors-headers
+django-cors-headers library enables cross sites recourse sharing of the server.
+pip install django-cors-headers
+
+5. pandas, scipy, matplotlib
+These libraries are used for data processing and bar charts plotting.
+pip install pandas scipy matplotlib
+
+To run the project, go to ‘server’ folder of the project, use following command:
+python manage.py runserver 8000
+This command will run the server and listen to localhost port 8000. Next, open a browser then navigate to http://127.0.0.1:8000/.
+ 
