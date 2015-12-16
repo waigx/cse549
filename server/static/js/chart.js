@@ -52,8 +52,8 @@ function drawScatter(data, query_object,regression, pictype){
     xAxis_name = query_object.x;
     yAxis_name = query_object.y;
   }else if(pictype == 3){
-    xName = query_object.attr1;
-    yName = query_object.attr1;
+    xName = query_object.attr1 + "_" + query_object.alg1;//
+    yName = query_object.attr1 + "_" + query_object.alg2;//
     category = query_object.attr1;
     xAxis = query_object.alg1;
     yAxis = query_object.alg2;
