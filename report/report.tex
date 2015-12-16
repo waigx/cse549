@@ -292,7 +292,14 @@ python manage.py runserver 8000
 This command will run the server and listen to localhost port 8000. Next, open a browser then navigate to http://127.0.0.1:8000/.
 
 \section {UI Features}
-We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
+We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios. Figure \ref{fig:sidebar} shows the sidebar of the application and a user could choose the feature he wants to review.
+\begin{figure}[h!]
+\centering
+\includegraphics[height=3in, width=1.75in]{./fig/sidebar.png}
+\caption{Web Application sidebar}
+\label{fig:sidebar}
+\end{figure}
+
 \subsection {Bar Chart for algorithms}
 We support the bar chart for all the algorithms to calculate the number of reads for each algorithm mapped in the experiment. One example is showed in figure \ref{fig:barchart_numreads}.
 
