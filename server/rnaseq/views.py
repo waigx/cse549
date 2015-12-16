@@ -27,7 +27,6 @@ def test(request):
 
 da = DataAnalyzor()
 
-
 def main_view(request):
     da.load_data()
     return HttpResponse("<head><script language=\"javascript\"> "
@@ -35,6 +34,40 @@ def main_view(request):
                         "</script></head>"
                         "<body>Data Loaded</body>")
 
+def _get_column(colname, alg_name, da):
+    return colname if colname in da.get_stat_fields() \
+            else colname + "_" + alg_name
+
+def _get_obj_data(da, request_body, alg, add_alg = False):
+    query_col1 = _get_column(request_body['x'], request_body[alg], da)
+    query_col2 = _get_column(request_body['y'], request_body[alg], da)
+
+    names, xvalues, yvalues = da.get_2col(query_col1, query_col2)
+
+    if add_alg:
+        obj_data = [{'name':names[x], request_body['x']:xvalues[x], request_body['y']:yvalues[x], \
+                    'alg':request_body[alg]} \
+                    for x in xrange(len(names))]
+    else:
+        obj_data = [{'name':names[x], request_body['x']:xvalues[x], request_body['y']:yvalues[x]} \
+                    for x in xrange(len(names))]
+    return obj_data
+
+def _get_obj_data_2(da, request_body):
+    obj_data1 = _get_obj_data(da, request_body, 'alg1')
+    obj_data2 = _get_obj_data(da, request_body, 'alg2')
+    return obj_data1 + obj_data2
+
+def _get_obj_data_3(da, request_body):
+    query_col1 = _get_column(request_body['attr1'], request_body['alg1'], da)
+    query_col2 = _get_column(request_body['attr2'], request_body['alg2'], da)
+
+    names, xvalues, yvalues, p1, p2, error = da.get_2col_wlinear(query_col1, query_col2)
+    obj_data = [{'name':names[x], query_col1:xvalues[x], query_col2:yvalues[x]} \
+               for x in xrange(len(names))]
+    if isinstance(error, list) or isinstance(error, tuple):
+        error = error[0]
+    return obj_data, p1, p2, error
 
 def get_data(request):
     if request.method == "POST":
@@ -57,89 +90,27 @@ def get_data(request):
                     json_obj['data'] += [{"alg":alg, "attrs":alg_field}]
             except:
                 return JsonResponse(json_obj)
-
         elif request_body['type'] == 'data':
-            except_lst = list(da.get_stat_fields())
             if request_body['pictype'] == '1':
                 try:
-                    query_col1 = request_body['x'] if request_body['x'] in except_lst \
-                                 else request_body['x'] + "_" + request_body['alg']
-                    query_col2 = request_body['y'] if request_body['y'] in except_lst \
-                                 else request_body['y'] + "_" + request_body['alg']
-                    raw_data = da.get_2col(query_col1, query_col2)
+                   json_obj['data'] = _get_obj_data(da, request_body, 'alg')
                 except:
                     return JsonResponse(json_obj)
-
-                obj_data_len = len(raw_data[0])
-                obj_data = [None] * obj_data_len
-                for i in xrange(obj_data_len):
-                    obj_data[i] = {
-                        'name': raw_data[0][i],
-                        request_body['x']: raw_data[1][i],
-                        request_body['y']: raw_data[2][i]
-                    }
-                json_obj['data'] = obj_data
             elif request_body['pictype'] == '2':
                 try:
-                    query1_col1 = request_body['x'] if request_body['x'] in except_lst \
-                                 else request_body['x'] + "_" + request_body['alg1']
-                    query1_col2 = request_body['y'] if request_body['y'] in except_lst \
-                                 else request_body['y'] + "_" + request_body['alg1']
-                    raw_data1 = da.get_2col(query1_col1, query1_col2)
+                    json_obj['data'] = _get_obj_data_2(da, request_body)
                 except:
                     return JsonResponse(json_obj)
-                try:
-                    query2_col1 = request_body['x'] if request_body['x'] in except_lst \
-                                 else request_body['x'] + "_" + request_body['alg2']
-                    query2_col2 = request_body['y'] if request_body['y'] in except_lst \
-                                 else request_body['y'] + "_" + request_body['alg2']
-                    raw_data2 = da.get_2col(query2_col1, query2_col2)
-                except:
-                    return JsonResponse(json_obj)
-
-                obj_data_len1 = len(raw_data1[0])
-                obj_data1 = [None] * obj_data_len1
-                for i in xrange(obj_data_len1):
-                    obj_data1[i] = {
-                        'alg': request_body['alg1'],
-                        'name': raw_data1[0][i],
-                        request_body['x']: raw_data1[1][i],
-                        request_body['y']: raw_data1[2][i]
-                    }
-                obj_data_len2 = len(raw_data2[0])
-                obj_data2 = [None] * obj_data_len2
-                for i in xrange(obj_data_len2):
-                    obj_data2[i] = {
-                        'alg': request_body['alg2'],
-                        'name': raw_data2[0][i],
-                        request_body['x']: raw_data2[1][i],
-                        request_body['y']: raw_data2[2][i]
-                    }
-                json_obj['data'] = obj_data1 + obj_data2
         elif request_body['type'] == 'data1':
-            except_lst = list(da.get_stat_fields())
             try:
-                query_col1 = request_body['attr1'] if request_body['attr1'] in except_lst \
-                             else request_body['attr1'] + "_" + request_body['alg1']
-                query_col2 = request_body['attr2'] if request_body['attr2'] in except_lst \
-                             else request_body['attr2'] + "_" + request_body['alg2']
-                raw_data = da.get_2col_wlinear(query_col1, query_col2)
+                obj_data, p1, p2, error = _get_obj_data_3(da, request_body)
+                json_obj['data'] = obj_data
+                json_obj['regression'] = {
+                    'p1': {'x':p1[0], 'y':p1[1]},
+                    'p2': {'x':p2[0], 'y':p2[1]},
+                    'error': error}
             except:
                 return JsonResponse(json_obj)
-            obj_data_len = len(raw_data[0])
-            obj_data = [None] * obj_data_len
-            for i in xrange(obj_data_len):
-                obj_data[i] = {
-                    'name': raw_data[0][i],
-                    request_body['attr1']: raw_data[1][i],
-                    request_body['attr2']: raw_data[2][i]
-                }
-            json_obj['data'] = obj_data
-            json_obj['regression'] = {
-                'p1': {'x':raw_data[3][0], 'y':raw_data[3][1]},
-                'p2': {'x':raw_data[4][0], 'y':raw_data[4][1]},
-                'error': list(raw_data[5])[0]}
-        print "Here2"
         return JsonResponse(json_obj)
     else:
         return HttpResponse("Access method must be POST.")
