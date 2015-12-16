@@ -54,8 +54,8 @@ def _get_obj_data(da, request_body, alg, add_alg = False):
     return obj_data
 
 def _get_obj_data_2(da, request_body):
-    obj_data1 = _get_obj_data(da, request_body, 'alg1')
-    obj_data2 = _get_obj_data(da, request_body, 'alg2')
+    obj_data1 = _get_obj_data(da, request_body, 'alg1', True)
+    obj_data2 = _get_obj_data(da, request_body, 'alg2', True)
     return obj_data1 + obj_data2
 
 def _get_obj_data_3(da, request_body):
