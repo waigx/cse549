@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import os
+import scipy.stats
 
 import reg
 
@@ -42,6 +43,7 @@ class DataAnalyzor:
 
         for algo_name, algo_resfile in self.algo_res.items():
             algo_res = self.algo_method[algo_name](algo_resfile, '_' + algo_name)
+            del algo_res['Length_' + algo_name]
             self.all_res = self.all_res.join(algo_res)
             self.algo_fields[algo_name] = [x[:x.find('_')] for x in algo_res.columns]
 
@@ -86,7 +88,7 @@ class DataAnalyzor:
         return self.algo_fields[algo]
 
     def get_algo_fields_common(self):
-        return [x for x in self.algo_fields['sailfish'] if x in self.algo_fields['kallisto'] and x in self.algo_fields['rsem']]
+        return [x for x in self.algo_fields['sailfish'] if x != 'Length' and x in self.algo_fields['kallisto'] and x in self.algo_fields['rsem']]
 
     def update_truth(self, truth_file):
         self.algo_res['truth'] = truth_file
@@ -107,6 +109,10 @@ class DataAnalyzor:
     def get_2col(self, colx, coly): # TODO: add name
         colx = self._convert_col(colx)
         coly = self._convert_col(coly)
+
+        print 'debug to print col:', colx, coly
+        assert colx in self.all_res.columns
+        assert coly in self.all_res.columns
         names = np.array(self.all_res.index, dtype=str) # self.all_res.ix[:, 'Name'], dtype=str)
         x = np.array(self.all_res.ix[:, colx], dtype=float)
         y = np.array(self.all_res.ix[:, coly], dtype=float)
@@ -128,18 +134,27 @@ class DataAnalyzor:
         for algo_name in self.algos:
             if algo_name == 'truth':
                 continue
-            tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
-            matrix.append({'':algo_name, 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
+            corr, tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
+            matrix.append({'':algo_name, 'spearman':corr, 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
         return matrix
 
-    def plot_scatter(self, colx, coly, figname):
+    def plot_scatter(self, colx, coly, figname, reg = False):
         self.all_res.plot(kind='scatter', x=colx, y=coly)
+        if reg:
+            names, x, y, p1, p2, err = self.get_2col_wlinear(colx, coly)
+            print p1, p2
+            plt.plot([p1[0], p2[0]], [p1[1], p2[1]])
         plt.savefig(figname)
         plt.clf()
 
     def _calculate_submatrix(self, nmx, nmy):
+        # st[nmx].corr(st[nmy], method = "spearman")
+
         x = np.array(self.all_res.ix[:, nmx], dtype=float)
         y = np.array(self.all_res.ix[:, nmy], dtype=float)
+        x = x / 2
+
+        corr = scipy.stats.spearmanr(x, y)[0]
 
         num_xplus = 0
         sum_eii = 0
@@ -148,8 +163,6 @@ class DataAnalyzor:
         sum_wmard = 0
 
         for xi, yi in zip(x, y):
-            xi = xi / 2
-
             ardi = 0 if xi + yi == 0 else abs(xi - yi) / (0.5 * (xi + yi))
             sum_ardi += ardi
             wmard = 0 if ardi == 0 else ardi * math.log(max(xi, yi), 2)
@@ -170,7 +183,7 @@ class DataAnalyzor:
         tpme = median(reis)
         mard = sum_ardi * 1.0 / len(x)
         wmard = sum_wmard * 1.0 / len(x)
-        return tpef, tpme, mard, wmard
+        return corr, tpef, tpme, mard, wmard
 
 
 if __name__ == '__main__':
@@ -183,7 +196,12 @@ if __name__ == '__main__':
     names, x, y = datas.get_2col('GC_Content', 'ExpFrac_truth')
     print names, x, y
 
-    print datas.get_algo_fields('sailfish')
-    print datas.get_algo_fields_common()
-    print datas.get_stat_fields()
-    print datas.get_bar_chart('NumReads')
+    print 'sailfish algo fields:', datas.get_algo_fields('sailfish')
+    print 'common fields:', datas.get_algo_fields_common()
+    print 'stat fields:', datas.get_stat_fields()
+    print 'bar_chart:', datas.get_bar_chart('NumReads')
+
+    names, x, y = datas.get_2col('TPM_truth', 'TPM_sailfish')
+    names, x, y = datas.get_2col('ExpFrac_truth', 'TPM_sailfish')
+
+    datas.plot_scatter('TPM_kallisto', 'TPM_sailfish', 'a.png', True)
