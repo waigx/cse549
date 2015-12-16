@@ -46,9 +46,11 @@ function getData(pictype){
             } else if (pictype == 3) {
                 drawScatter(result.data, json_query_obj, result.regression, pictype);
             }
+            $(".onloading_icon").remove();
         },
         error: function (result) {
             console.log(result);
+            $(".onloading_icon").remove();
         }
     });
 }

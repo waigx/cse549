@@ -135,7 +135,7 @@ class DataAnalyzor:
             if algo_name == 'truth':
                 continue
             corr, tpef, tpme, mard, wmard = self._calculate_submatrix('SeqNum_truth', 'NumReads_%s' % (algo_name))
-            matrix.append({'':algo_name, 'spearman':corr, 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
+            matrix.append({'':algo_name, 'spearman':round(corr, 2), 'TPEF':round(tpef, 2), 'TPME':round(tpme, 2), 'MARD':round(mard, 2), 'wMARD':round(wmard, 2)})
         return matrix
 
     def plot_scatter(self, colx, coly, figname, reg = False):
