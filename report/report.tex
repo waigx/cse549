@@ -52,6 +52,25 @@
 %\renewcommand\bottomfraction{.9}
 %\renewcommand\textfraction{.1}   
 %\setlength{\textfloatsep}{10pt plus 1.0pt minus 2.0pt}
+\usepackage{xcolor}
+\definecolor{pykeyword}{HTML}{000088}
+\definecolor{pyidentifier}{HTML}{000000}
+\definecolor{pystring}{HTML}{008800}
+\definecolor{pynumber}{HTML}{FF4000}
+\definecolor{pycomment}{HTML}{880000}
+
+
+\usepackage{listings}
+\lstset{language=bash,
+        basicstyle=\ttfamily\small,
+        tabsize=4,
+        showstringspaces=false,
+        keywordstyle=\color{pykeyword},
+        identifierstyle=\color{pyidentifier},
+        stringstyle=\color{pystring},
+        numberstyle=\color{pynumber},
+        commentstyle=\color{pycomment}
+}
 
 % Jian \DeclareMathOperator*{\median}{median}
 \newcommand{\mb}{\ensuremath\mathbf}
@@ -189,59 +208,71 @@ Using Javascript to check user selections' validation. For example, user are not
 
 \end{enumerate}
 
-\section {Installation and Usage}
-
+\section {Installation and Setup}
 This project provides a web-based user interface, which allows users access it locally or remotely. In this section, we give a brief introduction of installation. \\
-The project require following package/software: \\
+The project require following package/software:
+\subsection {Dependencies}
 \begin{enumerate}
 \item Modern web browser\\
-A modern web browser is required for the user interface. Because the interactive and data visualisation are highly depend on JavaScripts libraries, the latest version browser is highly recommended for better efficiency and experience.\\
+A modern web browser is required for the user interface. Because the interactive and data visualisation are highly depend on JavaScripts libraries, the latest version browser is highly recommended for better efficiency and experience.
 \item Python 2.7.9 or later\\
-The website framework and data processing are based on Python programming language.\\
+The website framework and data processing are based on Python programming language.
 \item Django\\
 Django provides a basic web server, as well as a web framework. It lays between browser and data. To install Django, using the command (Please note that you might need the administrator privilege, e.g. sudo before pip command):
-pip install django\\
+\lstset{language=bash}
+\begin{lstlisting}[frame=single]
+pip install django
+\end{lstlisting}
 \item django-cors-header\\
 django-cors-headers library enables cross sites recourse sharing of the server.
-pip install django-cors-headers\\
+\lstset{language=bash}
+\begin{lstlisting}[frame=single]
+pip install django-cors-headers
+\end{lstlisting}
 \item pandas, scipy, matplotlib\\
 These libraries are used for data processing and bar charts plotting.
-pip install pandas scipy matplotlib\\
-
+\lstset{language=bash}
+\begin{lstlisting}[frame=single]
+pip install pandas scipy matplotlib
+\end{lstlisting}
 \end{enumerate}
-To run the project, go to ‘server’ folder of the project, use following command: \\
-python manage.py runserver 8000 \\
-This command will run the server and listen to localhost port 8000. Next, open a browser then navigate to http://127.0.0.1:8000/. \\
+\subsection {Start Web Server}
+To run the project, go to ‘server’ folder of the project, use following command.
+\lstset{language=bash}
+\begin{lstlisting}[frame=single]
+python manage.py runserver 8000
+\end{lstlisting}
+This command will run the server and listen to localhost port 8000. Next, open a browser then navigate to http://127.0.0.1:8000/.
 
 \section {UI Features}
 We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
 \subsection {Bar Chart for algorithms}
 We support the bar chart for all the algorithms to calculate the number of reads for each algorithm mapped in the experiment. One example is showed in figure \ref{fig:barchart_numreads}.
 
-\begin{figure}
- \centering
- \includegraphics[width=.6\linewidth]{./fig/barchar_numreads.jpg}
- \caption{Bar Chart - NumReads}
-  \label{fig:barchart_numreads}
+\begin{figure}[h!]
+\centering
+\includegraphics[height=3in, width=3in]{./fig/barchar_numreads.jpg}
+\caption{Bar Chart - NumReads}
+\label{fig:barchart_numreads}
 \end{figure}
 
 \subsection {Scatter Plot for a Single Algorithm}
 For a single algorithm, we support the scatter plot about any two values such as transcript GC content versus abundance estimates. To plot a scatter plot, the user could go to the scatter plot for single algorithm page, choose an algorithm and the x-axis feature and the y-axis feature. With such a plot, every node on the scatter plot is one transcript and the coordinate is the chosen value pairs and as one example, the scatter plot for sailfish is showed in figure \ref{fig:single_algo_sailfish}. \\
 For an interactive mode, you could move the mouse to a node you want to view and the information would automatically showed as in figure \ref{fig:interactive_single_algo_sailfish}.
 
-\begin{figure}[ht]
-\centering
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/single_algo_sailfish.jpg}
-\caption{Sailfish - NumReads}
-\label{fig:single_algo_sailfish}
-\end{minipage}
-\quad
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/interactive_single_algo_sailfish.jpg}
-\caption{Sailfish - Interactive NumReads}
-\label{fig:interactive_single_algo_sailfish}
-\end{minipage}
+\begin{figure}[h!]
+        \centering
+	\begin{subfigure}[h]{0.5\textwidth}
+                \includegraphics[height=2.5in, width=2.5in]{fig/single_algo_sailfish.jpg}
+		\caption{Sailfish - NumReads vs Abundant Estimate}
+                \label{fig:single_algo_sailfish}
+        \end{subfigure}%
+        \begin{subfigure}[h]{0.5\textwidth}
+                \includegraphics[height=2.5in, width=2.5in]{fig/interactive_single_algo_sailfish.jpg}
+                \caption{Sailfish - NumReads vs Abundant Estimate (Interactive)}
+                \label{fig:interactive_single_algo_sailfish}
+        \end{subfigure}
+        \caption{Pictures of Clustering with Random Sampling}\label{fig:cluster}
 \end{figure}
 
 
