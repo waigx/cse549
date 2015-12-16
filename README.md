@@ -7,12 +7,12 @@ This is README file for Course Project CSE-549
 * Due Date: Dec 16, 2015
 * Students:
 
-|Name          |   SBU ID      |        Email               |
-|--------------|:-------------:|:--------------------------:|
-| Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |
-| Hongjin Zhu  |  109748818    | hongjin.zhu@stonybrook.edu |
-| Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  |
-| Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |
+|Name          |   SBU ID      |        Email               |          Git ID            |
+|--------------|:-------------:|:--------------------------:|:--------------------------:|
+| Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |       SwordYoung           |
+| Hongjin Zhu  |  109748818    | hozzhu@cs.stonybrook.edu   |  Alviss-zhj, Hongjin Zhu   |
+| Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  | jianglin101, Jianglin Wu   |
+| Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |          waigx             |
 
 Resource:
 
