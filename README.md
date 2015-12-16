@@ -11,7 +11,7 @@ This is README file for Course Project CSE-549
 |--------------|:-------------:|:--------------------------:|
 | Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |
 | Hongjin Zhu  |  xxxxxxxxx    |                            |
-| Jianglin Wu  |  xxxxxxxxx    |                            |
+| Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  |
 | Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |
 
 Resource:
@@ -51,3 +51,5 @@ Given the appropriate input (a set of abundance estimates — one of which may b
  4. Remaining credit will be granted for useful and interesting visualizations and metrics that you come up with.
 
 The goal here is really to provide an interactive, aesthetically pleasing, and useful tool for the interactive exploration of RNA-seq abundance estimation results.
+
+python manage.py runserver 8000
