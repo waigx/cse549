@@ -75,8 +75,8 @@ def get_data(request):
                 for i in xrange(obj_data_len):
                     obj_data[i] = {
                         'name': raw_data[0][i],
-                        query_col1: raw_data[1][i],
-                        query_col2: raw_data[2][i]
+                        request_body['x']: raw_data[1][i],
+                        request_body['y']: raw_data[2][i]
                     }
                 json_obj['data'] = obj_data
             elif request_body['pictype'] == '2':
@@ -103,8 +103,8 @@ def get_data(request):
                     obj_data1[i] = {
                         'alg': request_body['alg1'],
                         'name': raw_data1[0][i],
-                        query1_col1: raw_data1[1][i],
-                        query1_col2: raw_data1[2][i]
+                        request_body['x']: raw_data1[1][i],
+                        request_body['y']: raw_data1[2][i]
                     }
                 obj_data_len2 = len(raw_data2[0])
                 obj_data2 = [None] * obj_data_len2
@@ -112,8 +112,8 @@ def get_data(request):
                     obj_data2[i] = {
                         'alg': request_body['alg2'],
                         'name': raw_data2[0][i],
-                        query2_col1: raw_data2[1][i],
-                        query2_col2: raw_data2[2][i]
+                        request_body['x']: raw_data2[1][i],
+                        request_body['y']: raw_data2[2][i]
                     }
                 json_obj['data'] = obj_data1 + obj_data2
         elif request_body['type'] == 'data1':
@@ -131,8 +131,8 @@ def get_data(request):
             for i in xrange(obj_data_len):
                 obj_data[i] = {
                     'name': raw_data[0][i],
-                    query_col1: raw_data[1][i],
-                    query_col2: raw_data[2][i]
+                    request_body['attr1']: raw_data[1][i],
+                    request_body['attr2']: raw_data[2][i]
                 }
             json_obj['data'] = obj_data
             json_obj['regression'] = {
