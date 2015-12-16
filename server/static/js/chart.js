@@ -26,8 +26,8 @@ function drawScatter(data, query_object,regression, pictype){
 
   // canvas width and height
   var margin = {top: 20, right: 20, bottom: 30, left: 60},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      width = 600 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
 
   // x attribute name
   var xName;

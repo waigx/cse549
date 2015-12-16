@@ -40,6 +40,7 @@ def get_data(request):
     if request.method == "POST":
         json_obj = {}
         request_body = json.loads(request.body)
+        print request_body
         if request_body['type'] == 'algorithm':
             json_obj['data'] = []
             algs = da.get_all_algos()
@@ -77,7 +78,8 @@ def get_data(request):
                         query_col1: raw_data[1][i],
                         query_col2: raw_data[2][i]
                     }
-            if request_body['pictype'] == '2':
+                json_obj['data'] = obj_data
+            elif request_body['pictype'] == '2':
                 try:
                     query1_col1 = request_body['x'] if request_body['x'] in except_lst \
                                  else request_body['x'] + "_" + request_body['alg1']
@@ -113,8 +115,7 @@ def get_data(request):
                         query2_col1: raw_data2[1][i],
                         query2_col2: raw_data2[2][i]
                     }
-            json_obj['data'] = obj_data1 + obj_data2
-
+                json_obj['data'] = obj_data1 + obj_data2
         elif request_body['type'] == 'data1':
             except_lst = list(da.get_stat_fields())
             try:
@@ -138,6 +139,7 @@ def get_data(request):
                 'p1': {'x':raw_data[3][0], 'y':raw_data[3][1]},
                 'p2': {'x':raw_data[4][0], 'y':raw_data[4][1]},
                 'error': list(raw_data[5])[0]}
+        print "Here2"
         return JsonResponse(json_obj)
     else:
         return HttpResponse("Access method must be POST.")

@@ -34,23 +34,23 @@ function getData(pictype){
     }
 
     $.ajax({
-       url: 'http://127.0.0.1:8000/get',
-       type: 'POST',
-       contentType: 'application/json; charset=utf-8',
-       data: JSON.stringify(json_query_obj),
-       dataType: 'json',
-       success: function(result) {
-           console.log("Start draw charts");
-           if(pictype == 1 || pictype == 2){
-               drawScatter(result.data, json_query_obj, null, pictype);
-           }else if(pictype == 3){
-               drawScatter(result.data, json_query_obj, result.regression, pictype);
-           }
-       },
-       error: function(result){
-           console.log(result);
-       }
-    );
+        url: 'http://127.0.0.1:8000/get',
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(json_query_obj),
+        dataType: 'json',
+        success: function (result) {
+            console.log("Start draw charts");
+            if (pictype == 1 || pictype == 2) {
+                drawScatter(result.data, json_query_obj, null, pictype);
+            } else if (pictype == 3) {
+                drawScatter(result.data, json_query_obj, result.regression, pictype);
+            }
+        },
+        error: function (result) {
+            console.log(result);
+        }
+    });
 }
 
 
