@@ -65,7 +65,7 @@ def _get_obj_data_3(da, request_body):
     names, xvalues, yvalues, p1, p2, error = da.get_2col_wlinear(query_col1, query_col2)
     obj_data = [{'name':names[x], query_col1:xvalues[x], query_col2:yvalues[x]} \
                for x in xrange(len(names))]
-    error = list(errorv)
+    error = list(error)
     if isinstance(error, list) or isinstance(error, tuple):
         error = error[0]
     return obj_data, p1, p2, error
