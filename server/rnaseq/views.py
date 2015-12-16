@@ -131,8 +131,8 @@ def get_data(request):
             for i in xrange(obj_data_len):
                 obj_data[i] = {
                     'name': raw_data[0][i],
-                    request_body['attr1']: raw_data[1][i],
-                    request_body['attr2']: raw_data[2][i]
+                    query_col1: raw_data[1][i],
+                    query_col2: raw_data[2][i]
                 }
             json_obj['data'] = obj_data
             json_obj['regression'] = {
