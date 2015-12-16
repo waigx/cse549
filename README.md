@@ -14,6 +14,11 @@ This is README file for Course Project CSE-549
 | Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  | jianglin101, Jianglin Wu   |
 | Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |          waigx             |
 
+### Directories
+In this submitted project, there are several directories included:
+ - report: the report directory
+ - server: the code for the project
+
 Resource:
 
 ### Useful websites
@@ -52,4 +57,6 @@ Given the appropriate input (a set of abundance estimates — one of which may b
 
 The goal here is really to provide an interactive, aesthetically pleasing, and useful tool for the interactive exploration of RNA-seq abundance estimation results.
 
-python manage.py runserver 8000
+### Run server:
+go to directory where manage.py locates (./server/) and run:
+$ python manage.py runserver 8000
