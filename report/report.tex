@@ -109,7 +109,18 @@ Software developed by programmer can process high throughput RNA-seq data and cr
 
 
 \section {UI Architecture}
-We implemented this from four components: backend scripts, server, front-end, webpage. \\
+As a web application, this application includes the following parts as: \\
+\begin{enumerate}
+\item Webpage displayed at user's browser.
+\item Server to accept request from a user and send the webpage and contents to user.
+\item Request Handler to handle the request and query the related data from Data Layer. The result would also be packed to JSON format and send back to Server side.
+\item Data Layer to load and process data.
+\end{enumerate}
+
+The Architecture is showed in figure \ref{architecture}.
+
+\section {UI Components}
+
 \subsection {Backend}
 At backend scripts, we did the following jobs.
 \begin{enumerate}
@@ -122,47 +133,61 @@ We calculate the data such as GC content, ration of each nucleotides.
 \end{enumerate}
 The API contains the following methods.
 
+When the project runs, a simple server script listen to the specified localhost port. The Django preprocess all received requests of that port. In ?server/server/urls.py?, we defined the url scheme. Our scripts handling all requests according to this URL scheme, then wrap results to desired format and send to user browsers.  \\
+Because we have different types of interactive charts, bar charts of algorithm comparison and a performance evaluation table, the URL scheme assigned three corresponding URLs to them. Every URL has scripts to process requests to it. \\
+When user access the root URL, the server load all data to the memory and calculate all algorithm comparison charts. Instead of accessing file system, later data access will go to the memory directly, which is more faster and flexible. After that, the page redirect user to the main website page. \\
+For requests of the interactive charts, the URL is ?/get?. Because we have three types of chart plots. scripts of processing these requests defined three request types. Corresponding to single algorithm scatter chart, two algorithms scatter chart and two algorithms comparison chart. Firstly, JavaScripts in the client request algorithm types, server scripts give algorithm names and their attributes to the client. According to different picture types, the script gives different attributes. For example, in two algorithms comparison chart, we only give common attributes which make sense for comparison. Later on, this URL also response to the client requests for get attributes data, scripts return required data in JSON format to the client.
+For requests of the bar charts, the URL is ?/get\_common?. This URL provides all algorithm shared attributes in JSON format to the client. The client can use a predefined image URL scheme to load calculated images. For example, if an attribute is ?TPM?, predefined URL might be $?static/img/TPM\_bar.png?$ \\
+For requests of the performance evaluation table, the URL is ?/matrix?. It provides the algorithms? performance data to the client. \\
+
 \subsection {Frontend}
-We used and modified open source bootstrap template SB Admin 2 \cite{sb_admin_2} as our webpage, then integrated and implmented following:\\
+We used and modified open source bootstrap template SB Admin 2 \cite{sb_admin_2} as our webpage, then integrated and implemented following:
 \begin{enumerate}
-\item Javascript public library:\\
-Jquery: jquery-1.8.3.min.js\\
-D3js: d3.v3.min.js \cite{d3_scatterplot}\\
-\item Javascript library which we implemented:\\
-chart.js:  plot all the scatter charts.\\
-data.js: using Ajax call to fetch data from server.\\
-dropDownList.js: using Ajax call to fetch algorithm and attribute information from server. Change drop down list dynamicly based on user selection.\\
+\item Javascript public library:
+\begin{itemize}
+\item Jquery: jquery-1.8.3.min.js
+\item D3js: d3.v3.min.js \cite{d3_scatterplot}
+\end{itemize}
+
+\item Javascript library which we implemented:
+\begin{itemize}
+\item chart.js:  plot all the scatter charts.
+\item data.js: using Ajax call to fetch data from server.
+\item dropDownList.js: using Ajax call to fetch algorithm and attribute information from server. Change drop down list dynamically based on user selection.
+\end{itemize}
+
 \end{enumerate}
 
-Design detais:
+Design details:
 \begin{enumerate}
-\item Dynamic drop list.\\
-a. Using Ajax call to fetch Json data from user, which contains all feasible algorithms and their relevent attribute.\\
-b. Listening to user selection of algorithm, and dynamic change the attributes drop down list.\\
-c. Get user's selections from drop down list and send request to server. Then get data to plot scatter charts.\\
+\item Dynamic drop list.
+\begin{enumerate}
+\item Using Ajax call to fetch JSON data from user, which contains all feasible algorithms and their relevant attribute.
+\item Listening to user selection of algorithm, and dynamic change the attributes drop down list.
+\item Get user's selections from drop down list and send request to server. Then get data to plot scatter charts
+\end{enumerate}
 
-\item There are three type of scatter charts.\\
-a. Scatter Plot for a Single Algorithm\\
+\item There are three type of scatter charts.
+
+\begin{enumerate}
+\item Scatter Plot for a Single Algorithm. \\
 Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
-Requirement input value from user: {algorithm name, x axis, y axis}\\
-
-b. Scatter Plot for two Algorithms on the same metrics\\
+Requirement input value from user: {algorithm name, x axis, y axis}
+\item Scatter Plot for two Algorithms on the same metrics. \\
 Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
-Requirement input value from user: {algorithm 1, algorithm 2, a axis, y axis}\\
-
-c. Scatter Plot for two Algorithms on the same feature\\
+Requirement input value from user: {algorithm 1, algorithm 2, attribute}
+\item Scatter Plot for two Algorithms on the same feature. \\
 Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
-Requirement input value from user: {algorithm 1, algorithm 2, attribute}\\
+Requirement input value from user: {algorithm 1, algorithm 2, attribute}
+\end{enumerate}
 
-\item Interacter with user. \\
-When user mouse put on the spot from any scatter charts. It will display the name of the node, the x attribute value and y attribute value, and other information that user designed to display. \\
+\item interactive with user. \\
+When user mouse put on the spot from any scatter charts. It will display the name of the node, the x attribute value and y attribute value, and other information that user designed to display.
 
 \item Input check.\\
 Using Javascript to check user selections' validation. For example, user are not allowed to choose empty content and click the submit button. There will be some alert message.\\
 
 \end{enumerate}
-
-
 
 
 \section {UI Features}
