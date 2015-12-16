@@ -9,11 +9,18 @@ import numpy as np
 import math
 import os
 import scipy.stats
+import random
 
 import reg
 
 def median(lst):
     return np.median(np.array(lst))
+
+def sqr(x):
+    return x * x
+
+def distance(x0, y0, x1, y1):
+    return sqr(x0-x1) + sqr(y0-y1)
 
 class DataAnalyzor:
     def __init__(self):
@@ -106,6 +113,30 @@ class DataAnalyzor:
                 return 'LibFrac_truth'
         return col
 
+    def _sample(self, names, x, y):
+        lenth = len(names)
+        x_avg = sum(x) * 1.0 / lenth
+        y_avg = sum(y) * 1.0 / lenth
+        dist = [distance(x_avg, y_avg, x[i], y[i]) for i in xrange(lenth)]
+        dist.sort()
+        p = dist[-500]
+        res_name = []
+        res_x = []
+        res_y = []
+        for i in xrange(lenth):
+            if distance(x_avg, y_avg, x[i], y[i]) > p:
+                res_name.append(names[i])
+                res_x.append(x[i])
+                res_y.append(y[i])
+            else:
+                if random.randint(0, 100) < 5:
+                    res_name.append(names[i])
+                    res_x.append(x[i])
+                    res_y.append(y[i])
+
+        return res_name, res_x, res_y
+        # return names[:1000], x[:1000], y[:1000]
+
     def get_2col(self, colx, coly): # TODO: add name
         colx = self._convert_col(colx)
         coly = self._convert_col(coly)
@@ -122,6 +153,9 @@ class DataAnalyzor:
                 x = x * 1000000
             elif coly == 'LibFrac_truth':
                 y = y * 1000000
+
+        names, x, y = self._sample(names, x, y)
+        print 'final length is:', len(names)
         return names, x, y
 
     def get_2col_wlinear(self, colx, coly):
