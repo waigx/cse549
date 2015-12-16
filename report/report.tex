@@ -110,7 +110,7 @@ Software developed by programmer can process high throughput RNA-seq data and cr
 
 \section {UI Architecture}
 We implemented this from four components: backend scripts, server, front-end, webpage. \\
-\subsection {Backend scripts}
+\subsection {Backend}
 At backend scripts, we did the following jobs.
 \begin{enumerate}
 \item Calculate the statistics from the transcript. \\
@@ -121,6 +121,49 @@ We calculate the data such as GC content, ration of each nucleotides.
 \item Calculate the performance evaluation matrix.
 \end{enumerate}
 The API contains the following methods.
+
+\subsection {Frontend}
+We used and modified open source bootstrap template SB Admin 2 \cite{sb_admin_2} as our webpage, then integrated and implmented following:\\
+\begin{enumerate}
+\item Javascript public library:\\
+Jquery: jquery-1.8.3.min.js\\
+D3js: d3.v3.min.js \cite{d3_scatterplot}\\
+\item Javascript library which we implemented:\\
+chart.js:  plot all the scatter charts.\\
+data.js: using Ajax call to fetch data from server.\\
+dropDownList.js: using Ajax call to fetch algorithm and attribute information from server. Change drop down list dynamicly based on user selection.\\
+\end{enumerate}
+
+Design detais:
+\begin{enumerate}
+\item Dynamic drop list.\\
+a. Using Ajax call to fetch Json data from user, which contains all feasible algorithms and their relevent attribute.\\
+b. Listening to user selection of algorithm, and dynamic change the attributes drop down list.\\
+c. Get user's selections from drop down list and send request to server. Then get data to plot scatter charts.\\
+
+\item There are three type of scatter charts.\\
+a. Scatter Plot for a Single Algorithm\\
+Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
+Requirement input value from user: {algorithm name, x axis, y axis}\\
+
+b. Scatter Plot for two Algorithms on the same metrics\\
+Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
+Requirement input value from user: {algorithm 1, algorithm 2, a axis, y axis}\\
+
+c. Scatter Plot for two Algorithms on the same feature\\
+Get user input from front end, send requests through Ajax call to get matched data from server. Get each node and plot them on svg using D3js.\\
+Requirement input value from user: {algorithm 1, algorithm 2, attribute}\\
+
+\item Interacter with user. \\
+When user mouse put on the spot from any scatter charts. It will display the name of the node, the x attribute value and y attribute value, and other information that user designed to display. \\
+
+\item Input check.\\
+Using Javascript to check user selections' validation. For example, user are not allowed to choose empty content and click the submit button. There will be some alert message.\\
+
+\end{enumerate}
+
+
+
 
 \section {UI Features}
 We implemented the following features for the quality metrics with interactive modes to compare and view quality about algorithms. Currently we support 3 algorithms and a ground truth is added to compare the precision and the recall ratios.
@@ -140,6 +183,7 @@ The same features from two algorithms are also comparable. For example, Number o
 \subsection {Performance Evaluation}
 We could also calculate the performance evluation based on ground truth. The ground truth could be uploaded at upload page showed (??add a figure or not???). \\
 By given the ground truth, we now could calculate the following metrics: Spearman corr., TPEF, TPME, MARD, wMARD \cite{rapmap}.
+
 
 \section {Extensibility}
 \subsection {Upload new data}
@@ -163,6 +207,10 @@ Thanks and regards to TA Hirak. He helped us a lot on the project.
 % \section{References}
 \begin{thebibliography}{100} % 100 is a random guess of the total number of
 %references
+\bibitem{sb_admin_2} "SB Admin 2 - Free Bootstrap Admin Theme." Start Bootstrap. N.p., n.d. Web. 15 Dec. 2015.\\ $<http://startbootstrap.com/template-overviews/sb-admin-2/>$.
+
+\bibitem{d3_scatterplot}"D3 Scatterplot Example." D3 Scatterplot Example. N.p., n.d. Web. 15 Dec. 2015.\\ $<http://bl.ocks.org/weiglemc/6185069>$.
+
 \bibitem{rapmap} Srivastava, Avi, Hirak Sarkar, and Rob Patro. "RapMap: A Rapid, Sensitive and Accurate Tool for Mapping RNA-seq Reads to Transcriptomes." \emph{bioRxiv} (2015): 029652.
 \end{thebibliography}
 
