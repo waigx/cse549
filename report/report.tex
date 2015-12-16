@@ -124,7 +124,9 @@ RNA sequencing, is a technology that uses the capabilities of next-generation se
 
 \section {Introduction}
 
-Software developed by programmer can process high throughput RNA-seq data and create detail results for Biologist and Bioinformatician for further analyzing. However, these tools cannot replace the role of a professional user who knows how to deal with the data and the meaning behind the number and text.  A simple graph contains more information than paragraphs of text description.  So, to provide an easy way for Biologist to research on the output data, we have our User Interface which consists of following functionalists: Bar chart for basic statatical information about the data; Scatter Plots for algorithm output data visulization, comparison and analysis; and Metrics for performance evaluation.   \\
+Software developed by programmer can process high throughput RNA-seq data and create detail results for Biologist and Bioinformatician for further analyzing. However, these tools cannot replace the role of a professional user who knows how to deal with the data and the meaning behind the number and text.  A simple graph contains more information than paragraphs of text description.  So, to provide an easy way for Biologist to research on the output data, we have our User Interface which consists of following functionalists: Bar chart for basic statistical information about the data; Scatter Plots for algorithm output data visualization, comparison and analysis; and Metrics for performance evaluation.   \\
+To implement such an application, we used Python as the backend, we build a web service based on Tool Django and using JavaScript at frontend and using Python at the backend. \\
+As an application, a user could view a bar chart to compare the statistics among all the statistics and also could choose any two attributes for a scatter plot. Any also a node's information could be showed as interaction. At last, a performance evaluation could be listed with the ground truth file.
 
 
 \section {UI Architecture}
@@ -137,27 +139,72 @@ As a web application, this application includes the following parts as: \\
 \end{enumerate}
 
 The Architecture is showed in figure \ref{architecture}.
+\begin{figure}[h!]
+\centering
+\includegraphics[height=2.5in, width=5in]{./fig/arch.png}
+\caption{Architecture}
+\label{architecture}
+\end{figure}
+
+As one example, here is one example story when a user wants to view the scatter plot for algorithm \emph{Sailfish} with the attributes GC content versus abundant estimate. The internal steps are:
+\begin{enumerate}
+\item User clicks the page for single algorithm plot.
+\item A request for an algorithm list would be sent by JavaScript on webpage to Django.
+\item Django passes the request to a Request Handler, and the handler would get the algorithm list and packaged the list o JSON package and send the package to Django.
+\item Django passes the result to JavaScript, and JavaScript lists the algorithms in a drop down list.
+\item User chooses one algorithm to display. Let's say the user clicks sailfish.
+\item Same steps as 1. to 4., a request for all the attributes of algorithm sailfish is sent to backend and finally the list would be displayed on webpage.
+\item User chooses two attributes from the list on webpage.
+\item Same steps as 1. to 4. a request for the two attribute data would be sent and the data is sent back finally.
+\item JavaScript plots the data on webpage.
+\item When the user moves the mouse to any point on the plot and the information would be displayed on webpage by JavaScript.
+\end{enumerate}
+
+Here is the visualized flow for this example in figure \ref{fig:story}.
+\begin{figure}[h!]
+\centering
+\includegraphics[height=4in, width=5in]{./fig/story.png}
+\caption{Example of one request}
+\label{fig:story}
+\end{figure}
 
 \section {UI Components}
 
-\subsection {Backend}
-At backend scripts, we did the following jobs.
+\subsection {Data Layer}
+At data layer scripts, we did the following jobs.
 \begin{enumerate}
 \item Calculate the statistics from the transcript. \\
 We calculate the data such as GC content, ration of each nucleotides.
 \item Load data from result files for algorithms and also the ground truth from profile files according to given parser.
 \item Concat the data of results, the ground truth and the statistics based on transcript name as index to a large table.
-\item Provide the API to query the data for UI layers.
+\item Provide the API to query the algorithm list, the attributes and the data for UI layers.
 \item Calculate the performance evaluation matrix.
+\item Sample data if the data has too many items. \\
+If there are too many data, for example, in the given data there are more than 80 thousands of points to be plotted at frontend. To reduce the size of the data and keep all the outliers, I used the following algorithm:
+\begin{enumerate}
+\item Calculate the centroid point of the data.
+\item Calculate the distances for all points to center point and pick a distance to include 99\% of the poinrts.
+\item For any points which have longer distance than the picked 99\% one, we would keep them.
+\item For all points which have smaller distance than the picked 99\% boundary, we would sample them by a ratio.
+By using this sample, we could get 0.5\% to 1\% size of the original data size.
 \end{enumerate}
-The API contains the following methods.
+\end{enumerate}
+% The API contains the following methods.
 
-When the project runs, a simple server script listen to the specified localhost port. The Django preprocess all received requests of that port. In ?server/server/urls.py?, we defined the url scheme. Our scripts handling all requests according to this URL scheme, then wrap results to desired format and send to user browsers.  \\
+\subsection {Request Handler}
+When the project runs, a simple server script listen to the specified localhost port. The Django preprocess all received requests of that port. In \emph{server/server/urls.py}, we defined the url scheme. Our scripts handling all requests according to this URL scheme, then wrap results to desired format and send to user browsers.  \\
 Because we have different types of interactive charts, bar charts of algorithm comparison and a performance evaluation table, the URL scheme assigned three corresponding URLs to them. Every URL has scripts to process requests to it. \\
 When user access the root URL, the server load all data to the memory and calculate all algorithm comparison charts. Instead of accessing file system, later data access will go to the memory directly, which is more faster and flexible. After that, the page redirect user to the main website page. \\
-For requests of the interactive charts, the URL is ?/get?. Because we have three types of chart plots. scripts of processing these requests defined three request types. Corresponding to single algorithm scatter chart, two algorithms scatter chart and two algorithms comparison chart. Firstly, JavaScripts in the client request algorithm types, server scripts give algorithm names and their attributes to the client. According to different picture types, the script gives different attributes. For example, in two algorithms comparison chart, we only give common attributes which make sense for comparison. Later on, this URL also response to the client requests for get attributes data, scripts return required data in JSON format to the client.
-For requests of the bar charts, the URL is ?/get\_common?. This URL provides all algorithm shared attributes in JSON format to the client. The client can use a predefined image URL scheme to load calculated images. For example, if an attribute is ?TPM?, predefined URL might be $?static/img/TPM\_bar.png?$ \\
-For requests of the performance evaluation table, the URL is ?/matrix?. It provides the algorithms? performance data to the client. \\
+Here are the request types and how we would handle them.
+\begin{enumerate}
+\item For requests of the interactive charts, the URL is \emph{/get}. Because we have three types of chart plots. scripts of processing these requests defined three request types. Corresponding to single algorithm scatter chart, two algorithms scatter chart and two algorithms comparison chart.
+\begin{enumerate}
+\item Firstly, JavaScripts in the client request algorithm types, server scripts give algorithm names and their attributes to the client. According to different picture types, the script gives different attributes. For example, in two algorithms comparison chart, we only give common attributes which make sense for comparison.
+\item Later on, this URL also response to the client requests for get attributes data, scripts return required data in JSON format to the client.
+\end{enumerate}
+\item For requests of the bar charts, the URL is \emph{/get\_common}. This URL provides all algorithm shared attributes in JSON format to the client. The client can use a predefined image URL scheme to load calculated images. For example, if an attribute is ?TPM?, predefined URL might be \emph{static/img/TPM\_bar.png}
+\item For requests of the performance evaluation table, the URL is \emph{/matrix}. It provides the algorithms? performance data to the client.
+\end{enumerate}
 
 \subsection {Frontend}
 We used and modified open source bootstrap template SB Admin 2 \cite{sb_admin_2} as our webpage, then integrated and implemented following:
@@ -268,7 +315,7 @@ For an interactive mode, you could move the mouse to a node you want to view and
                 \label{fig:single_algo_sailfish}
         \end{subfigure}%
         \begin{subfigure}[h]{0.5\textwidth}
-                \includegraphics[height=2.5in, width=2.5in]{fig/interactive_single_algo_sailfish.jpg}
+                \includegraphics[height=2.3in, width=2.3in]{fig/interactive_single_algo_sailfish.jpg}
                 \caption{Sailfish - NumReads vs Abundant Estimate (Interactive)}
                 \label{fig:interactive_single_algo_sailfish}
         \end{subfigure}
@@ -279,42 +326,39 @@ For an interactive mode, you could move the mouse to a node you want to view and
 \subsection {Scatter Plot for two Algorithms on the same metrics}
 We could also compare two algorithms based on the same scatter plots. For example, we could compare the distribution between GC Content and Number of Reads for both Sailfish and Kallisto, as showed in figure \ref{fig:two_algo}.
 
-
+\begin{figure}[h!]
+\centering
+\includegraphics[height=3in, width=3in]{./fig/two_algo.jpg}
+\caption{Sailfish and Kallisto:  GC Content vs  NumReads}
+\label{fig:two_algo}
+\end{figure}
 
 \subsection {Scatter Plot for two Algorithms on the same feature}
 The same features from two algorithms are also comparable. For example, Number of Reads for both Sailfish and Kallisto. We expected they are similar if both of them are good algorithms (figure \ref{fig:compare_sk}). And we could also compare it with the ground truth (figure \ref{fig:compare_truth}).
 
-\begin{figure}[ht]
-\centering
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/compare_sk.jpg}
-\caption{Compare NumReads between Sailfish and Kallisto }
-\label{fig:compare_sk}
-\end{minipage}
-\quad
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/compare_truth.jpg}
-\caption{Compare NumReads between ground truth and Kallisto  }
-\label{fig:compare_truth}
-\end{minipage}
+\begin{figure}[h!]
+        \centering
+	\begin{subfigure}[h]{0.5\textwidth}
+                \includegraphics[height=2.5in, width=2.5in]{fig/compare_sk.jpg}
+		\caption{Compare NumReads between Sailfish and Kallisto }
+                \label{fig:compare_sk}
+        \end{subfigure}%
+        \begin{subfigure}[h]{0.5\textwidth}
+                \includegraphics[height=2.5in, width=2.5in]{fig/compare_truth.jpg}
+                \caption{Compare NumReads between ground truth and Kallisto  }
+                \label{fig:compare_truth}
+        \end{subfigure}
+        \caption{Pictures of Clustering with Random Sampling}\label{fig:cluster}
 \end{figure}
 
 \subsection {Performance Evaluation}
 We could also calculate the performance evaluation based on ground truth. The ground truth could be uploaded at upload page showed in figure \ref{fig:metrics}
 
-\begin{figure}[ht]
+\begin{figure}[h!]
 \centering
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/two_algo.jpg}
-\caption{Sailfish and Kallisto:  GCContent vs  NumReads }
-\label{fig:two_algo}
-\end{minipage}
-\quad
-\begin{minipage}[b]{0.47\linewidth}
-\includegraphics[width=1.0\textwidth]{./fig/metrics.jpg}
-  \caption{Performance Evaluation  }
-  \label{fig:metrics}
-\end{minipage}
+\includegraphics[height=2.25in, width=3in]{./fig/metrics.jpg}
+\caption{Performance Evaluation}
+\label{fig:metrics}
 \end{figure}
 
 By given the ground truth, we now could calculate the following metrics: Spearman corr., TPEF, TPME, MARD, wMARD \cite{rapmap}.
@@ -323,17 +367,23 @@ By given the ground truth, we now could calculate the following metrics: Spearma
 \section {Extensibility}
 \subsection {Upload new data}
 Currently the uploading of ground truth is added to re-calculate the performance evaluation results. \\
-We also considered the extensibility in our implementation. Currently the result files are directly uploaded to the server side and by upload and rename to the targeted name, call $DataAnalyzor.load_data()$, the server could reload all data to replace the old metrics.
+We also considered the extensibility in our implementation. Currently the result files are directly uploaded to the server side and by upload and rename to the targeted name, call $DataAnalyzor.load\_data()$, the server could reload all data to replace the old metrics. \\
+Currently the filename for each algorithm is coded in $dataAnalyzor$'s constructor.
 \subsection {Add new algorithm}
 To add a new algorithm, one just need to add a related method in $AnalyzorBuilder$  with the corresponding result file, parsing method same as in file $ParsingUtility.py$ and the new algorithm could automatically be supported by the whole framework. \\
 At both the front-end and back-end, the algorithms are queried from the $DataAnalyzor$. Once the algorithms and the corresponding methods for reading the data in, the new algorithm and the data would be showed as same as other old features.
-\subsection {Add Features to compare}
-Currently we support a wide range of comparison: all possible pairs of \\
+
+\section{Improvement and Future Works}
+We still have several unfinished features such as: \\
+\begin{enumerate}
+\item Add upload file feature at the website.
+\item Automatically add new algorithms. Currently the algorithm parser has predefined columns. If the result files are using unique names, such as $NumReads$, we could automatically add new algorithms just by upload the result file.
+\end{enumerate}
 
 
 \section{Acknowledge}
 Thanks and regards to Professor Rob Patro's lectures. We were inspired by the algorithms and the vivid examples. \\
-Thanks and regards to TA Hirak. He helped us a lot on the project.
+Thanks and regards to the TA Hirak. He helped us a lot on the project.
 
 % \bibliographystyle{plain}	% (uses file "plain.bst")
 % \bibliography{literature}
