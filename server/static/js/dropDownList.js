@@ -192,6 +192,8 @@ function checkPicInfo(pictype){
 	Button action
 */
 function submit_pic(){
+	// clean svg canvas
+  	d3.select("svg").remove();
 	var pictype = $("#pic_type_text").val();
     if(checkPicInfo(pictype)){
         getData(pictype);
