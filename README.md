@@ -27,12 +27,18 @@ Resource:
 
 ### Useful websites
 
+* Sample demo
+		Sample demo is included in the main path named CSE549-demo-1.mov
+		A clear version for the sample demo can be seen at:
+		https://drive.google.com/file/d/0B7S08uGtvwqkcl91ekZ6U1dES0E/view?usp=sharing
+		https://www.dropbox.com/s/gp7i7kngr7uneer/CSE549-demo.mov?dl=0
+
 * Sample project:
 
         http://lair.berkeley.edu/ellahi/
         https://github.com/pachterlab/sleuth
         
-        ???: http://fantom.gsc.riken.jp/zenbu/gLyphs/#config=64Bm-JzKJdjrAhl2rKyj_B
+        http://fantom.gsc.riken.jp/zenbu/gLyphs/#config=64Bm-JzKJdjrAhl2rKyj_B
 
 * Bootstrap Library (CSS):
 
