@@ -14,10 +14,11 @@ This is README file for Course Project CSE-549
 | Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  | jianglin101, Jianglin Wu   |
 | Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |          waigx             |
 
-### Directories
-In this submitted project, there are several directories included:
+### Directories and Files
+In this submitted project, there are several directories and files included:
  - report: the report directory
  - server: the code for the project
+ - CSE549_demo.mov: video demo of the project
 
 ### Run server:
 go to directory where manage.py locates (./server/) and run:
@@ -28,10 +29,10 @@ Resource:
 ### Useful websites
 
 * Sample demo
-		Sample demo is included in the main path named CSE549-demo-1.mov
-		A clear version for the sample demo can be seen at:
-		https://drive.google.com/file/d/0B7S08uGtvwqkcl91ekZ6U1dES0E/view?usp=sharing
-		https://www.dropbox.com/s/gp7i7kngr7uneer/CSE549-demo.mov?dl=0
+	Sample demo is included in the main path named CSE549_demo.mov
+	A clear version for the sample demo can be seen at:
+	- https://drive.google.com/file/d/0B7S08uGtvwqkcl91ekZ6U1dES0E/view?usp=sharing
+	- https://www.dropbox.com/s/gp7i7kngr7uneer/CSE549-demo.mov?dl=0
 
 * Sample project:
 
