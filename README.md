@@ -7,12 +7,21 @@ This is README file for Course Project CSE-549
 * Due Date: Dec 16, 2015
 * Students:
 
-|Name          |   SBU ID      |        Email               |
-|--------------|:-------------:|:--------------------------:|
-| Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |
-| Hongjin Zhu  |  xxxxxxxxx    |                            |
-| Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  |
-| Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |
+|Name          |   SBU ID      |        Email               |          Git ID            |
+|--------------|:-------------:|:--------------------------:|:--------------------------:|
+| Jian Yang    |  110168771    | yang16@cs.stonybrook.edu   |       SwordYoung           |
+| Hongjin Zhu  |  109748818    | hozzhu@cs.stonybrook.edu   |  Alviss-zhj, Hongjin Zhu   |
+| Jianglin Wu  |  108075432    | jiangwu@cs.stonybrook.edu  | jianglin101, Jianglin Wu   |
+| Yigong Wang  |  109973706    | yigwang@cs.stonybrook.edu  |          waigx             |
+
+### Directories
+In this submitted project, there are several directories included:
+ - report: the report directory
+ - server: the code for the project
+
+### Run server:
+go to directory where manage.py locates (./server/) and run:
+$ python manage.py runserver 8000
 
 Resource:
 
@@ -51,5 +60,3 @@ Given the appropriate input (a set of abundance estimates — one of which may b
  4. Remaining credit will be granted for useful and interesting visualizations and metrics that you come up with.
 
 The goal here is really to provide an interactive, aesthetically pleasing, and useful tool for the interactive exploration of RNA-seq abundance estimation results.
-
-python manage.py runserver 8000
