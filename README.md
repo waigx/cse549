@@ -5,6 +5,7 @@ This is README file for Course Project CSE-549
 * Topic: UI for RNA-seq quantification
 * Professor: Rob Patro
 * Due Date: Dec 16, 2015
+* github link: https://github.com/waigx/cse549
 * Students:
 
 |Name          |   SBU ID      |        Email               |          Git ID            |
