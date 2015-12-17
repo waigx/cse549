@@ -141,11 +141,9 @@ var tooltip = d3.select("body").append("div")
       .on("mouseover", function(d) {
           tooltip.transition()
                .duration(200)
-               .style("opacity", .5);
+               .style("opacity", .9);
           tooltip.html(d["name"] + "<br/> (" + xValue(d) 
-	        + ", " + yValue(d) + ")" +"<br/>"+ "first info:"
-          + "<br/>"
-          + "second info:")
+	        + ", " + yValue(d) + ")" )
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 28) + "px"); 
       })
